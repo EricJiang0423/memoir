@@ -46,10 +46,7 @@
     padding: 0.06em 0.32em;
   }
 
-  /* language toggle */
-  html[data-lang="zh"] [data-en] { display: none; }
-  html[data-lang="en"] [data-zh] { display: none; }
-  html[data-lang="en"] [data-combined] { display: none; }
+  /* language toggle — handled by JS */
 
   .lang-switch {
     background: rgba(255,255,255,0.08);
@@ -819,27 +816,33 @@ pip install -r skill/requirements.txt</code></pre>
   </footer>
 
   <script>
-    function toggleLang() {
-      var html = document.documentElement;
-      var current = html.getAttribute('data-lang');
-      var next = current === 'zh' ? 'en' : 'zh';
-      html.setAttribute('data-lang', next);
-      // Update button text
-      var btn = document.querySelector('.lang-switch');
-      if (btn) btn.textContent = next === 'zh' ? 'EN' : '中文';
-      // Save preference
-      try { localStorage.setItem('memoir-lang', next); } catch(e) {}
+    var i18n = { current: 'zh', elements: [] };
+
+    function collectI18n() {
+      document.querySelectorAll('[data-zh][data-en]').forEach(function(el) {
+        i18n.elements.push({ el: el, zh: el.getAttribute('data-zh'), en: el.getAttribute('data-en') });
+      });
     }
-    // Restore saved preference
-    (function() {
-      var saved;
-      try { saved = localStorage.getItem('memoir-lang'); } catch(e) {}
-      if (saved && (saved === 'zh' || saved === 'en')) {
-        document.documentElement.setAttribute('data-lang', saved);
-        var btn = document.querySelector('.lang-switch');
-        if (btn) btn.textContent = saved === 'zh' ? 'EN' : '中文';
-      }
-    })();
+
+    function applyLang(lang) {
+      i18n.current = lang;
+      document.documentElement.setAttribute('data-lang', lang);
+      i18n.elements.forEach(function(item) {
+        item.el.textContent = lang === 'zh' ? item.zh : item.en;
+      });
+      var btn = document.querySelector('.lang-switch');
+      if (btn) btn.textContent = lang === 'zh' ? 'EN' : '中文';
+      try { localStorage.setItem('memoir-lang', lang); } catch(e) {}
+    }
+
+    function toggleLang() {
+      applyLang(i18n.current === 'zh' ? 'en' : 'zh');
+    }
+
+    collectI18n();
+    var saved;
+    try { saved = localStorage.getItem('memoir-lang'); } catch(e) {}
+    applyLang((saved === 'zh' || saved === 'en') ? saved : 'zh');
   </script>
 </body>
 </html>
