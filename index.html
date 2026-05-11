@@ -40,9 +40,9 @@
   a { color: inherit; }
   img { display: block; max-width: 100%; }
   code {
-    font-family: var(--mono);
+    font-family: var(--serif);
     font-size: 0.92em;
-    background: #eee;
+    background: #e8e8e8;
     padding: 0.06em 0.32em;
   }
 
@@ -241,7 +241,6 @@
     color: var(--text-tertiary);
     font-size: 0.7rem;
   }
-  .dark .section-kicker { color: var(--text-on-dark-secondary); }
   h2 {
     margin: 0;
     font-family: var(--serif);
@@ -258,7 +257,6 @@
     line-height: 1.9;
     text-wrap: pretty;
   }
-  .dark .section-copy { color: var(--text-on-dark-secondary); }
 
   /* product strip */
   .product-strip {
@@ -338,13 +336,13 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1px;
-    background: var(--border-on-dark);
-    border: 1px solid var(--border-on-dark);
+    background: var(--border);
+    border: 1px solid var(--border);
   }
   .capability {
     min-height: 17rem;
     padding: clamp(1.2rem, 2.5vw, 1.8rem);
-    background: var(--bg-dark);
+    background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -357,7 +355,7 @@
   }
   .capability p {
     margin: 1.4rem 0 0;
-    color: var(--text-on-dark-secondary);
+    color: var(--text-secondary);
     font-size: 0.92rem;
     text-wrap: pretty;
   }
@@ -441,7 +439,7 @@
     border-radius: 6px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    border: 1px solid rgba(255,255,255,0.16);
+    border: 1px solid var(--border);
   }
   .flagship-visual img {
     width: 100%;
@@ -449,9 +447,9 @@
     min-height: 28rem;
     object-fit: cover;
   }
-  .flagship-copy h2 { color: #fff; }
+  .flagship-copy h2 { color: var(--text); }
   .flagship-copy p {
-    color: var(--text-on-dark-secondary);
+    color: var(--text-secondary);
     font-size: 1.03rem;
     text-wrap: pretty;
   }
@@ -461,7 +459,9 @@
     gap: 0.75rem;
     margin-top: 1.6rem;
   }
-  .flagship .action { border-color: rgba(255,255,255,0.24); }
+  .flagship .action { border-color: var(--border); color: var(--text); }
+  .flagship .action.primary { color: #fff; background: #111; }
+  .flagship .action.primary:hover { background: #333; }
 
   /* install */
   .install-grid {
@@ -484,11 +484,11 @@
   pre {
     margin: 1rem 0 0;
     overflow: auto;
-    background: var(--bg-dark);
-    color: var(--text-on-dark);
+    background: #eee;
+    color: var(--text);
     border-radius: 4px;
     padding: 1rem;
-    font-family: var(--mono);
+    font-family: var(--serif);
     font-size: 0.78rem;
     line-height: 1.7;
   }
@@ -648,7 +648,7 @@
     </section>
 
     <!-- Skill -->
-    <section class="band dark" id="skill">
+    <section class="band alt" id="skill">
       <div class="wrap">
         <div class="section-head">
           <div>
@@ -760,7 +760,7 @@
     </section>
 
     <!-- Demo -->
-    <section class="band dark" id="demo">
+    <section class="band alt" id="demo">
       <div class="wrap flagship">
         <div class="flagship-visual">
           <img src="./demos/assets/photo_0021.jpg" alt="Arashiyama bamboo grove path">
