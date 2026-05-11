@@ -31,6 +31,8 @@ output/visual_sample.json
 # Project: generated output (keep template, ignore generated diaries)
 output/
 *.diary.html
+# ...but the committed demo(s) under demos/ are kept on purpose
+!demos/*.diary.html
 
 # IDE
 .idea/

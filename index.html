@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>memoir · 旅行回忆录 skill — demo</title>
+<meta name="description" content="memoir 是一个 Claude Code skill：给定一组旅行照片，生成完全自包含的旅行回忆 HTML。这里是一份示例输出。">
+<style>
+  :root{
+    --ink:oklch(0.205 0.034 235); --paper:oklch(0.973 0.014 82);
+    --on-ink:oklch(0.945 0.013 86); --on-ink-soft:oklch(0.735 0.022 232);
+    --accent:oklch(0.66 0.155 42);
+    --serif:"Songti SC","Source Han Serif SC","Noto Serif CJK SC","Noto Serif SC",Georgia,serif;
+    --sans:"PingFang SC","Hiragino Sans GB","Source Han Sans SC","Noto Sans CJK SC",-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:"SFMono-Regular","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+    gap:1.4rem; padding:clamp(2rem,8vw,7rem); background:var(--ink); color:var(--on-ink);
+    font-family:var(--sans); line-height:1.8; -webkit-font-smoothing:antialiased;
+  }
+  .kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--accent)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.2rem,6vw,4.4rem);line-height:1.1;letter-spacing:.02em;text-wrap:balance}
+  p{max-width:38rem;color:var(--on-ink-soft);text-wrap:pretty}
+  .go{
+    display:inline-flex;align-items:baseline;gap:.7rem;margin-top:.6rem;padding:.95rem 1.6rem;
+    border:1px solid color-mix(in oklch,var(--accent) 60%,transparent);border-radius:2px;
+    color:var(--on-ink);text-decoration:none;font-size:1.05rem;letter-spacing:.02em;
+    transition:background .2s ease,border-color .2s ease;
+  }
+  .go:hover{background:color-mix(in oklch,var(--accent) 24%,transparent);border-color:var(--accent)}
+  .go .arr{font-family:var(--mono);color:var(--accent)}
+  .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;color:var(--on-ink-soft);margin-top:1.2rem}
+  .meta a{color:var(--on-ink-soft)}
+  .meta a:hover{color:var(--on-ink)}
+</style>
+</head>
+<body>
+  <p class="kicker">memoir · 旅行回忆录 skill</p>
+  <h1>京都三日，<br>坂道与黄昏</h1>
+  <p>这是 <strong style="color:var(--on-ink);font-weight:400">memoir</strong> —— 一个 Claude Code skill —— 的一份示例输出：给定一组旅行照片（这份 demo 用的 30 张京都照片由 <strong style="color:var(--on-ink);font-weight:400">OpenAI GPT Image 2.0</strong> 生成，是合成图、非真实照片），它会提取 EXIF、反查地名、自动聚类、艺术策展、撰写基于照片内容的叙述，最后生成一份**完全自包含的旅行回忆 HTML**（单文件，拖进浏览器即可打开）。</p>
+  <a class="go" href="./demos/kyoto-3-days.diary.html"><span>进入这次旅行</span><span class="arr">→</span></a>
+  <p class="meta">示例文件约 22 MB（照片 base64 内嵌；首次加载稍慢）· 图片由 GPT Image 2.0 生成 · <a href="https://github.com/EricJiang0423/memoir">查看 skill 仓库 ↗</a></p>
+</body>
+</html>

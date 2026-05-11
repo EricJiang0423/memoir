@@ -1,38 +1,43 @@
 # demos/
 
-放置示例 `.diary.html` 文件，便于潜在用户在不真正跑流水线的情况下预览 trip-design 的输出风格。
+放置示例 `.diary.html` 文件，便于潜在用户在不真正跑流水线的情况下预览 memoir 的输出风格。
+
+## 在线预览
+
+- **京都三日，坂道与黄昏** —— https://ericjiang0423.github.io/memoir/
+  （GitHub Pages 由 `main` 分支根目录提供；根目录 `index.html` 是个落地页，点进去就是这份 demo）
+
+## 当前 demo
+
+| 文件 | 说明 |
+|------|------|
+| `kyoto-3-days.diary.html` | 3 天京都行（2026-03），30 张照片里精选 23 张；单文件、完全自包含（照片 base64 内嵌、Leaflet inline），约 22 MB，双击浏览器即可打开 |
+| `photos/kyoto/` | 上面这份 demo 的输入照片（30 张，全部由 **OpenAI GPT Image 2.0** 生成的合成图——非真实照片，可公开；详见该目录下的 `README.md`） |
+
+> 这些京都照片全部由 GPT Image 2.0 生成（合成图，不对应真实拍摄、不涉及真实人物 / 隐私）——这也是为什么可以放进公开仓库。**真实旅行照片（含家人、住址、行程的）不要放进 demos/。**
+
+## 复现这份 demo
+
+```bash
+python3 scripts/check_deps.py
+python3 scripts/extract_photos.py --folder demos/photos/kyoto --out raw_photos.json
+python3 scripts/geocode.py        --in  raw_photos.json      --out geocoded_photos.json
+python3 scripts/cluster.py        --in  geocoded_photos.json --out diary_data.json
+# Claude 在这里做：多模态策展（剔弱图/重复图）→ 回填 diary_data.json 的 title / narrative / caption
+#                  → 现场设计一份带 token 占位的 HTML
+python3 scripts/build_diary.py    --in  diary_data.json      --html output/kyoto.diary.draft.html \
+                                  --out output/kyoto.diary.html
+```
+
+`build_diary.py` 只做 token 后处理（base64 / Leaflet 注入 / JSON 数据注入 / 缩放 / 自包含校验）；旅行标题、每日叙述、照片 caption、HTML 设计都由 Claude 现场产出——所以每次复现的文字和视觉都会不一样（这是 skill 的设计：NEVER converge）。
 
 ## 命名约定
 
 ```
 demos/
-├── README.md                                ← 本文件
-├── okinawa-2-days.diary.html                ← 体积小（4 张照片，<500 KB）
-└── tokyo-7-days.diary.html                  ← 中等体积示例（可选，<10 MB）
+├── README.md
+├── kyoto-3-days.diary.html         ← 当前 demo（~22 MB，自包含）
+└── photos/kyoto/                   ← demo 输入照片（AI 生成）
 ```
 
-## 当前状态
-
-V1 暂不附带 demo 文件——避免污染仓库体积。
-
-要本地生成一份小示例：
-
-```bash
-# 用 PIL 造 4 张测试图片
-python3 -c "
-from PIL import Image
-import os
-os.makedirs('/tmp/trip_demo', exist_ok=True)
-for i, c in enumerate([(70,140,180),(232,112,74),(125,212,224),(232,154,74)], 1):
-    Image.new('RGB', (1920, 1280), c).save(f'/tmp/trip_demo/photo_{i:04d}.jpg', quality=85)
-"
-
-# 走完整流水线（需要先把 diary_data.json 的 title/narrative 手动填一下）
-# 详见 README.md「手动跑」一节
-```
-
-## 注意事项
-
-- **不要**把含真实人物的照片放进 demos/ 公开仓库——隐私风险
-- 体积 < 500 KB 的示例最适合（≤ 4 张照片）
-- 复杂示例放外部（GitHub Pages / 私人 Gist），用 link 在 README 引用
+新增 demo 建议控制体积；体积大的可以用 `python3 scripts/build_diary.py ... --embed-photos relative`（HTML ~1 MB + 同名 `.assets/` 照片目录），或放外部（Gist / Pages）再用 link 在此引用。
