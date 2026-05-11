@@ -3,25 +3,126 @@
 <title>京都三日，坂道与黄昏 · 极简白</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#fff;color:oklch(.28 .015 250);font-family:"PingFang SC","Hiragino Sans GB","Noto Sans CJK SC",sans-serif;font-weight:300;font-size:16px;line-height:2;padding:0}
-.ws-hero{padding:clamp(4rem,15vh,10rem) 10% clamp(3rem,10vh,6rem);max-width:50rem;margin:0 auto}
-.wsh-1{font-family:"Songti SC","Noto Serif SC",Georgia,serif;font-weight:400;font-size:clamp(2rem,5vw,3.8rem);line-height:1.3;letter-spacing:.06em;color:oklch(.15 .01 250)}
-.wsh-date{font-family:"SF Mono",monospace;font-size:.7rem;letter-spacing:.25em;color:oklch(.55 .015 250);margin-top:1.5rem}
-.wsh-meta{font-family:"SF Mono",monospace;font-size:.65rem;letter-spacing:.2em;color:oklch(.65 .01 250);margin-top:.3rem}
-.ws-day-h{padding:3rem 10% 0;max-width:50rem;margin:0 auto}
-.ws-day-h h2{font-family:"Songti SC","Noto Serif SC",Georgia,serif;font-weight:400;font-size:1.6rem;letter-spacing:.08em;color:oklch(.15 .01 250)}
-.ws-day-h span{font-family:"SF Mono",monospace;font-size:.65rem;letter-spacing:.2em;color:oklch(.6 .01 250);display:block;margin-top:.2rem}
-.ws-narr{max-width:32rem;margin:1.5rem auto 2rem;padding:0 10%;font-size:.95rem;line-height:2.2;color:oklch(.35 .015 250)}
-.ws-photo-unit{max-width:28rem;margin:0 auto 3rem;padding:0 10%}
-.ws-img{width:100%;max-width:22rem;display:block;margin:0 auto}
-.ws-cap{text-align:center;margin-top:.5rem}
-.wsc-cap{font-size:.82rem;color:oklch(.45 .015 250);display:block;line-height:1.6}
-.wsc-time{font-family:"SF Mono",monospace;font-size:.6rem;letter-spacing:.15em;color:oklch(.65 .01 250);display:block;margin-top:.15rem}
-.colophon{text-align:center;padding:4rem 2rem;font-family:"SF Mono",monospace;font-size:.6rem;color:oklch(.7 .01 250);line-height:1.8;border-top:1px solid oklch(.92 .005 85);max-width:30rem;margin:0 auto}
-@media(max-width:600px){.ws-hero{padding-left:5%;padding-right:5%}.ws-photo-unit{padding:0 5%}.ws-img{max-width:100%}.ws-narr{padding:0 5%}}
+:root{
+  --ink:#1a1a1a;--ink-2:#5b5b5b;--ink-3:#9a9a96;--rule:#e6e4df;
+  --serif:"Songti SC","Noto Serif CJK SC","Noto Serif SC",STSong,Georgia,"Times New Roman",serif;
+  --mono:"SF Mono","JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,"Courier New",monospace;
+  --col:46rem;
+}
+html{background:#fff}
+body{background:#fff;color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.95;font-weight:400;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+img{display:block;max-width:100%}
+
+.ws-run{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;gap:1rem;padding:1.05rem clamp(1.4rem,5vw,3rem);font-family:var(--mono);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3);background:rgba(255,255,255,.86);backdrop-filter:blur(8px);z-index:20}
+
+/* one offset column carries everything; the margin is the design */
+.ws-col{width:min(var(--col),100%);margin-left:max(8vw,1.4rem);padding-right:clamp(1.4rem,5vw,3rem)}
+
+.ws-hero{padding:clamp(7rem,22vh,14rem) 0 clamp(5rem,16vh,11rem)}
+.ws-hero .eyebrow{font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2.4rem}
+.ws-hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.2rem,5.4vw,4rem);line-height:1.35;letter-spacing:.05em}
+.ws-hero hr{border:0;border-top:1px solid var(--ink);width:3rem;margin:2.4rem 0}
+.ws-hero .meta{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;color:var(--ink-2);line-height:2.3}
+
+.ws-day{padding:clamp(4.5rem,13vh,9.5rem) 0 0}
+.ws-day .line{border:0;border-top:1px solid var(--rule);margin:0 0 clamp(2.6rem,7vh,5rem)}
+.ws-day .tag{font-family:var(--mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3)}
+.ws-day h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.55rem,3vw,2.2rem);letter-spacing:.06em;margin:.9rem 0 0}
+.ws-day .date{font-family:var(--mono);font-size:.64rem;letter-spacing:.18em;color:var(--ink-3);margin-top:.45rem;display:block}
+.ws-narr{margin-top:clamp(1.8rem,5vh,3rem);max-width:34rem;color:var(--ink-2);font-size:1rem;line-height:2.15;text-wrap:pretty}
+
+/* photo units — generous air; mostly small + left-aligned, one anchor per day */
+.ws-fig{margin:clamp(3.6rem,11vh,7.5rem) 0 0}
+.ws-fig img{width:min(20rem,100%)}
+.ws-fig.anchor img{width:100%}
+.ws-fig figcaption{display:flex;gap:1.1rem;align-items:baseline;margin-top:.9rem;padding-top:.6rem;border-top:1px solid var(--rule);max-width:min(20rem,100%)}
+.ws-fig.anchor figcaption{max-width:100%}
+.ws-fig figcaption .t{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--ink-3);white-space:nowrap}
+.ws-fig figcaption .c{font-size:.82rem;line-height:1.6;color:var(--ink-2)}
+
+.ws-end{padding:clamp(6.5rem,17vh,12rem) 0 clamp(4rem,10vh,7rem)}
+.ws-end hr{border:0;border-top:1px solid var(--ink);width:3rem;margin-bottom:2rem}
+.ws-end p{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);line-height:2.3}
+
+@media(max-width:820px){
+  .ws-col{margin-left:0;padding-left:clamp(1.4rem,6vw,2.4rem)}
+}
+@media(max-width:600px){
+  .ws-fig img,.ws-fig figcaption{width:100%;max-width:100%}
+  .ws-run{font-size:.55rem;letter-spacing:.16em}
+  .ws-run span:nth-child(2){display:none}
+}
 </style>
 </head><body>
-<div class="ws-hero"><h1 class="wsh-1">京都三日<br>坂道与黄昏</h1><p class="wsh-date">2026-03-15 ~ 2026-03-17</p><p class="wsh-meta">3 天</p></div><div class="ws-day-h"><h2>鴨川的黄昏</h2><span>2026-03-15</span></div><p class="ws-narr">京都駅的钢架穹顶把三月的天光筛成细格，落在拖行李箱的人群上。我在到达大厅拍了第一张——还裹着冬衣，围巾没解。酒店房间不大，箱子摊在床上；窗外是连片的灰屋顶、车站的铁道场，再远是一线浅山。下午往北走，街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。傍晚拐到鴨川，人沿河岸坐成一长排，说话的不多，对岸町屋的灯在水面上发抖。回程在车站地下的美食层买了便当，带回房间吃——饭团、玄米茶，桌上散着充电线和一叠小票。第一天就这样落进了这座盆地。</p><div class="ws-photo-unit"><img src="assets/photo_0001.jpg" data-photo-id="photo_0001" loading="lazy" decoding="async" alt="京都駅钢架穹顶下，到达的第一张，人群还裹着冬衣。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">京都駅钢架穹顶下，到达的第一张，人群还裹着冬衣。</span><span class="wsc-time">09:00</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0002.jpg" data-photo-id="photo_0002" loading="lazy" decoding="async" alt="酒店窗外：连片灰屋顶、车站的铁道场，再远是一线浅山。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">酒店窗外：连片灰屋顶、车站的铁道场，再远是一线浅山。</span><span class="wsc-time">10:17</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0005.jpg" data-photo-id="photo_0005" loading="lazy" decoding="async" alt="街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。</span><span class="wsc-time">13:08</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0006.jpg" data-photo-id="photo_0006" loading="lazy" decoding="async" alt="鴨川的黄昏，人沿河岸坐成一长排，对岸町屋的灯在水面上发抖。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">鴨川的黄昏，人沿河岸坐成一长排，对岸町屋的灯在水面上发抖。</span><span class="wsc-time">14:25</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0007.jpg" data-photo-id="photo_0007" loading="lazy" decoding="async" alt="酒店桌上的便利店晚饭——饭团、便当、玄米茶，和一堆充电线、小票。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">酒店桌上的便利店晚饭——饭团、便当、玄米茶，和一堆充电线、小票。</span><span class="wsc-time">15:42</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0010.jpg" data-photo-id="photo_0010" loading="lazy" decoding="async" alt="京都駅地下美食层，背着包、拖着箱子挑便当的一对。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">京都駅地下美食层，背着包、拖着箱子挑便当的一对。</span><span class="wsc-time">18:33</span></div></div><div class="ws-day-h"><h2>東山的坂道</h2><span>2026-03-16</span></div><p class="ws-narr">清水坂还没走到顶，朱红的仁王門先撞进眼里——后面那座三重塔的橙红更冲，台阶上全是人，几树樱花刚开了个头。从清水的木舞台往外看，整座京都摊在脚下，雾里的京都塔细得像根针。下坡进産寧坂、二年坂，石阶半路有一树樱，店门口挂着白纸伞；陶器店里蓝白的饭碗摞成小山，茶室的绿釉碗端上来时，旁边卧着一只樱花形的和菓子，窗外是青苔。午后拐进一处寺院，白砂耙出纹路，人坐在阴影里的木廊上看墙晒太阳。等出来天已经斜了——八坂の塔在落日里成了一个剪影，再往祇園走，巷子窄下来，一盏圆纸灯笼亮着，湿石板把光照回脸上。</p><div class="ws-photo-unit"><img src="assets/photo_0011.jpg" data-photo-id="photo_0011" loading="lazy" decoding="async" alt="清水寺仁王門和朱红三重塔，台阶上挤满人，樱花刚开了个头。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">清水寺仁王門和朱红三重塔，台阶上挤满人，樱花刚开了个头。</span><span class="wsc-time">09:50</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0012.jpg" data-photo-id="photo_0012" loading="lazy" decoding="async" alt="清水の舞台，木栏外是整座京都，远处京都塔细得像根针。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">清水の舞台，木栏外是整座京都，远处京都塔细得像根针。</span><span class="wsc-time">10:07</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0013.jpg" data-photo-id="photo_0013" loading="lazy" decoding="async" alt="産寧坂的石阶，半路一树樱，店门口挂着白纸伞。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">産寧坂的石阶，半路一树樱，店门口挂着白纸伞。</span><span class="wsc-time">11:24</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0014.jpg" data-photo-id="photo_0014" loading="lazy" decoding="async" alt="二年坂的陶器店，蓝白饭碗在木桌上摞成小山。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">二年坂的陶器店，蓝白饭碗在木桌上摞成小山。</span><span class="wsc-time">12:41</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0015.jpg" data-photo-id="photo_0015" loading="lazy" decoding="async" alt="绿釉碗里的抹茶，旁边一只樱花形的和菓子，窗外是青苔。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">绿釉碗里的抹茶，旁边一只樱花形的和菓子，窗外是青苔。</span><span class="wsc-time">13:58</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0016.jpg" data-photo-id="photo_0016" loading="lazy" decoding="async" alt="寺院的枯山水，白砂耙出纹路，人坐在阴影里的木廊上，墙在晒太阳。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">寺院的枯山水，白砂耙出纹路，人坐在阴影里的木廊上，墙在晒太阳。</span><span class="wsc-time">14:15</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0018.jpg" data-photo-id="photo_0018" loading="lazy" decoding="async" alt="八坂の塔在落日里成了剪影，民居屋顶连成一片，店口的灯笼亮起。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">八坂の塔在落日里成了剪影，民居屋顶连成一片，店口的灯笼亮起。</span><span class="wsc-time">16:49</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0019.jpg" data-photo-id="photo_0019" loading="lazy" decoding="async" alt="祇園的小巷，一盏圆纸灯笼、一辆停着的自行车，湿石板把光照回来。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">祇園的小巷，一盏圆纸灯笼、一辆停着的自行车，湿石板把光照回来。</span><span class="wsc-time">17:06</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0020.jpg" data-photo-id="photo_0020" loading="lazy" decoding="async" alt="手拭巾铺子，藤花、金鱼、猫头鹰的花样在木台上摊开。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">手拭巾铺子，藤花、金鱼、猫头鹰的花样在木台上摊开。</span><span class="wsc-time">18:23</span></div></div><div class="ws-day-h"><h2>竹林與渡月橋</h2><span>2026-03-17</span></div><p class="ws-narr">竹林の道一进去声音就变了——竹子在头顶合拢，光是绿的，人顺着木栏往里走，谁也没大声说话。出来到桂川边，渡月橋的木栏一路弯到对岸山脚；河水是冷的青绿色，几条带篷的游船浮在上面，对岸的坡上零星点着樱。中午找了家湯豆腐，砂锅在小火上冒泡，配着米饭、湯叶和一桌小碟，窗外又是一片庭院的绿。下午在巷子里碰上紫色的嵐電过道口，住宅区安安静静，路边一树樱花开着；又钻进一座苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。傍晚回到京都駅，蓝色时刻里新干线停在站台，旅人沿黄线排队——从高处再看一眼这座亮着灯的大堂，就上车了。</p><div class="ws-photo-unit"><img src="assets/photo_0021.jpg" data-photo-id="photo_0021" loading="lazy" decoding="async" alt="竹林の道，竹子在头顶合拢，光是绿的，人顺着木栏往里走。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">竹林の道，竹子在头顶合拢，光是绿的，人顺着木栏往里走。</span><span class="wsc-time">09:40</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0022.jpg" data-photo-id="photo_0022" loading="lazy" decoding="async" alt="渡月橋横过桂川，木栏一路弯到对岸的山脚下。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">渡月橋横过桂川，木栏一路弯到对岸的山脚下。</span><span class="wsc-time">10:57</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0023.jpg" data-photo-id="photo_0023" loading="lazy" decoding="async" alt="桂川的河岸，水是冷青绿色，几条带篷的游船浮着，对岸坡上点着樱。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">桂川的河岸，水是冷青绿色，几条带篷的游船浮着，对岸坡上点着樱。</span><span class="wsc-time">11:14</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0025.jpg" data-photo-id="photo_0025" loading="lazy" decoding="async" alt="湯豆腐的昼饭，砂锅在小火上冒泡，配米饭、湯叶和一桌小碟。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">湯豆腐的昼饭，砂锅在小火上冒泡，配米饭、湯叶和一桌小碟。</span><span class="wsc-time">13:48</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0026.jpg" data-photo-id="photo_0026" loading="lazy" decoding="async" alt="苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。</span><span class="wsc-time">14:05</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0028.jpg" data-photo-id="photo_0028" loading="lazy" decoding="async" alt="紫色的嵐電过小路口，住宅区安安静静，路边一树樱花开着。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">紫色的嵐電过小路口，住宅区安安静静，路边一树樱花开着。</span><span class="wsc-time">16:39</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0029.jpg" data-photo-id="photo_0029" loading="lazy" decoding="async" alt="京都駅的站台，蓝色时刻里新干线停着，旅人沿黄线排队。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">京都駅的站台，蓝色时刻里新干线停着，旅人沿黄线排队。</span><span class="wsc-time">17:56</span></div></div><div class="ws-photo-unit"><img src="assets/photo_0030.jpg" data-photo-id="photo_0030" loading="lazy" decoding="async" alt="从高处看京都駅的大堂，夜里店铺都亮着，钢架顶罩住整片光。" class="ws-img"><div class="ws-cap"><span class="wsc-cap">从高处看京都駅的大堂，夜里店铺都亮着，钢架顶罩住整片光。</span><span class="wsc-time">18:13</span></div></div>
-<div class="colophon">京都三日，坂道与黄昏 · memoir · 处理在本机完成 · 照片由 GPT Image 2.0 生成</div>
+<div class="ws-run"><span>memoir</span><span>京都三日 · 坂道与黄昏</span><span>white space</span></div>
+
+<section class="ws-hero ws-col">
+  <p class="eyebrow">memoir — kyoto 2026</p>
+  <h1>京都三日<br>坂道与黄昏</h1>
+  <hr>
+  <p class="meta">2026.03.15 — 03.17 · 3 天<br>23 张精选 · 处理在本机完成</p>
+</section>
+
+<section class="ws-day">
+  <div class="ws-col">
+    <hr class="line">
+    <p class="tag">Day 01</p>
+    <h2>鴨川的黄昏</h2>
+    <span class="date">2026.03.15</span>
+    <p class="ws-narr">京都駅的钢架穹顶把三月的天光筛成细格，落在拖行李箱的人群上。我在到达大厅拍了第一张——还裹着冬衣，围巾没解。酒店房间不大，箱子摊在床上；窗外是连片的灰屋顶、车站的铁道场，再远是一线浅山。下午往北走，街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。傍晚拐到鴨川，人沿河岸坐成一长排，说话的不多，对岸町屋的灯在水面上发抖。回程在车站地下的美食层买了便当，带回房间吃——饭团、玄米茶，桌上散着充电线和一叠小票。第一天就这样落进了这座盆地。</p>
+
+    <figure class="ws-fig"><img src="assets/photo_0001.jpg" data-photo-id="photo_0001" loading="lazy" decoding="async" alt="京都駅钢架穹顶下，到达的第一张，人群还裹着冬衣。"><figcaption><span class="t">09:00</span><span class="c">京都駅钢架穹顶下，到达的第一张，人群还裹着冬衣。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0002.jpg" data-photo-id="photo_0002" loading="lazy" decoding="async" alt="酒店窗外：连片灰屋顶、车站的铁道场，再远是一线浅山。"><figcaption><span class="t">10:17</span><span class="c">酒店窗外：连片灰屋顶、车站的铁道场，再远是一线浅山。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0005.jpg" data-photo-id="photo_0005" loading="lazy" decoding="async" alt="街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。"><figcaption><span class="t">13:08</span><span class="c">街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。</span></figcaption></figure>
+    <figure class="ws-fig anchor"><img src="assets/photo_0006.jpg" data-photo-id="photo_0006" loading="lazy" decoding="async" alt="鴨川的黄昏，人沿河岸坐成一长排，对岸町屋的灯在水面上发抖。"><figcaption><span class="t">14:25</span><span class="c">鴨川的黄昏，人沿河岸坐成一长排，对岸町屋的灯在水面上发抖。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0007.jpg" data-photo-id="photo_0007" loading="lazy" decoding="async" alt="酒店桌上的便利店晚饭——饭团、便当、玄米茶，和一堆充电线、小票。"><figcaption><span class="t">15:42</span><span class="c">酒店桌上的便利店晚饭——饭团、便当、玄米茶，和一堆充电线、小票。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0010.jpg" data-photo-id="photo_0010" loading="lazy" decoding="async" alt="京都駅地下美食层，背着包、拖着箱子挑便当的一对。"><figcaption><span class="t">18:33</span><span class="c">京都駅地下美食层，背着包、拖着箱子挑便当的一对。</span></figcaption></figure>
+  </div>
+</section>
+
+<section class="ws-day">
+  <div class="ws-col">
+    <hr class="line">
+    <p class="tag">Day 02</p>
+    <h2>東山的坂道</h2>
+    <span class="date">2026.03.16</span>
+    <p class="ws-narr">清水坂还没走到顶，朱红的仁王門先撞进眼里——后面那座三重塔的橙红更冲，台阶上全是人，几树樱花刚开了个头。从清水的木舞台往外看，整座京都摊在脚下，雾里的京都塔细得像根针。下坡进産寧坂、二年坂，石阶半路有一树樱，店门口挂着白纸伞；陶器店里蓝白的饭碗摞成小山，茶室的绿釉碗端上来时，旁边卧着一只樱花形的和菓子，窗外是青苔。午后拐进一处寺院，白砂耙出纹路，人坐在阴影里的木廊上看墙晒太阳。等出来天已经斜了——八坂の塔在落日里成了一个剪影，再往祇園走，巷子窄下来，一盏圆纸灯笼亮着，湿石板把光照回脸上。</p>
+
+    <figure class="ws-fig anchor"><img src="assets/photo_0011.jpg" data-photo-id="photo_0011" loading="lazy" decoding="async" alt="清水寺仁王門和朱红三重塔，台阶上挤满人，樱花刚开了个头。"><figcaption><span class="t">09:50</span><span class="c">清水寺仁王門和朱红三重塔，台阶上挤满人，樱花刚开了个头。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0012.jpg" data-photo-id="photo_0012" loading="lazy" decoding="async" alt="清水の舞台，木栏外是整座京都，远处京都塔细得像根针。"><figcaption><span class="t">10:07</span><span class="c">清水の舞台，木栏外是整座京都，远处京都塔细得像根针。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0013.jpg" data-photo-id="photo_0013" loading="lazy" decoding="async" alt="産寧坂的石阶，半路一树樱，店门口挂着白纸伞。"><figcaption><span class="t">11:24</span><span class="c">産寧坂的石阶，半路一树樱，店门口挂着白纸伞。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0014.jpg" data-photo-id="photo_0014" loading="lazy" decoding="async" alt="二年坂的陶器店，蓝白饭碗在木桌上摞成小山。"><figcaption><span class="t">12:41</span><span class="c">二年坂的陶器店，蓝白饭碗在木桌上摞成小山。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0015.jpg" data-photo-id="photo_0015" loading="lazy" decoding="async" alt="绿釉碗里的抹茶，旁边一只樱花形的和菓子，窗外是青苔。"><figcaption><span class="t">13:58</span><span class="c">绿釉碗里的抹茶，旁边一只樱花形的和菓子，窗外是青苔。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0016.jpg" data-photo-id="photo_0016" loading="lazy" decoding="async" alt="寺院的枯山水，白砂耙出纹路，人坐在阴影里的木廊上，墙在晒太阳。"><figcaption><span class="t">14:15</span><span class="c">寺院的枯山水，白砂耙出纹路，人坐在阴影里的木廊上，墙在晒太阳。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0018.jpg" data-photo-id="photo_0018" loading="lazy" decoding="async" alt="八坂の塔在落日里成了剪影，民居屋顶连成一片，店口的灯笼亮起。"><figcaption><span class="t">16:49</span><span class="c">八坂の塔在落日里成了剪影，民居屋顶连成一片，店口的灯笼亮起。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0019.jpg" data-photo-id="photo_0019" loading="lazy" decoding="async" alt="祇園的小巷，一盏圆纸灯笼、一辆停着的自行车，湿石板把光照回来。"><figcaption><span class="t">17:06</span><span class="c">祇園的小巷，一盏圆纸灯笼、一辆停着的自行车，湿石板把光照回来。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0020.jpg" data-photo-id="photo_0020" loading="lazy" decoding="async" alt="手拭巾铺子，藤花、金鱼、猫头鹰的花样在木台上摊开。"><figcaption><span class="t">18:23</span><span class="c">手拭巾铺子，藤花、金鱼、猫头鹰的花样在木台上摊开。</span></figcaption></figure>
+  </div>
+</section>
+
+<section class="ws-day">
+  <div class="ws-col">
+    <hr class="line">
+    <p class="tag">Day 03</p>
+    <h2>竹林與渡月橋</h2>
+    <span class="date">2026.03.17</span>
+    <p class="ws-narr">竹林の道一进去声音就变了——竹子在头顶合拢，光是绿的，人顺着木栏往里走，谁也没大声说话。出来到桂川边，渡月橋的木栏一路弯到对岸山脚；河水是冷的青绿色，几条带篷的游船浮在上面，对岸的坡上零星点着樱。中午找了家湯豆腐，砂锅在小火上冒泡，配着米饭、湯叶和一桌小碟，窗外又是一片庭院的绿。下午在巷子里碰上紫色的嵐電过道口，住宅区安安静静，路边一树樱花开着；又钻进一座苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。傍晚回到京都駅，蓝色时刻里新干线停在站台，旅人沿黄线排队——从高处再看一眼这座亮着灯的大堂，就上车了。</p>
+
+    <figure class="ws-fig anchor"><img src="assets/photo_0021.jpg" data-photo-id="photo_0021" loading="lazy" decoding="async" alt="竹林の道，竹子在头顶合拢，光是绿的，人顺着木栏往里走。"><figcaption><span class="t">09:40</span><span class="c">竹林の道，竹子在头顶合拢，光是绿的，人顺着木栏往里走。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0022.jpg" data-photo-id="photo_0022" loading="lazy" decoding="async" alt="渡月橋横过桂川，木栏一路弯到对岸的山脚下。"><figcaption><span class="t">10:57</span><span class="c">渡月橋横过桂川，木栏一路弯到对岸的山脚下。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0023.jpg" data-photo-id="photo_0023" loading="lazy" decoding="async" alt="桂川的河岸，水是冷青绿色，几条带篷的游船浮着，对岸坡上点着樱。"><figcaption><span class="t">11:14</span><span class="c">桂川的河岸，水是冷青绿色，几条带篷的游船浮着，对岸坡上点着樱。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0025.jpg" data-photo-id="photo_0025" loading="lazy" decoding="async" alt="湯豆腐的昼饭，砂锅在小火上冒泡，配米饭、湯叶和一桌小碟。"><figcaption><span class="t">13:48</span><span class="c">湯豆腐的昼饭，砂锅在小火上冒泡，配米饭、湯叶和一桌小碟。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0026.jpg" data-photo-id="photo_0026" loading="lazy" decoding="async" alt="苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。"><figcaption><span class="t">14:05</span><span class="c">苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0028.jpg" data-photo-id="photo_0028" loading="lazy" decoding="async" alt="紫色的嵐電过小路口，住宅区安安静静，路边一树樱花开着。"><figcaption><span class="t">16:39</span><span class="c">紫色的嵐電过小路口，住宅区安安静静，路边一树樱花开着。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0029.jpg" data-photo-id="photo_0029" loading="lazy" decoding="async" alt="京都駅的站台，蓝色时刻里新干线停着，旅人沿黄线排队。"><figcaption><span class="t">17:56</span><span class="c">京都駅的站台，蓝色时刻里新干线停着，旅人沿黄线排队。</span></figcaption></figure>
+    <figure class="ws-fig"><img src="assets/photo_0030.jpg" data-photo-id="photo_0030" loading="lazy" decoding="async" alt="从高处看京都駅的大堂，夜里店铺都亮着，钢架顶罩住整片光。"><figcaption><span class="t">18:13</span><span class="c">从高处看京都駅的大堂，夜里店铺都亮着，钢架顶罩住整片光。</span></figcaption></figure>
+  </div>
+</section>
+
+<section class="ws-end ws-col">
+  <hr>
+  <p>京都三日，坂道与黄昏<br>memoir · 同一组照片的第六种读法 · 极简白<br>照片由 GPT Image 2.0 生成 · 处理在本机完成</p>
+</section>
+
 <script type="application/json" data-trip-design="photos-index">{"photo_0001": {"src": "assets/photo_0001.jpg", "caption": "京都駅钢架穹顶下，到达的第一张，人群还裹着冬衣。", "datetime": "2026-03-14T09:00:00"}, "photo_0002": {"src": "assets/photo_0002.jpg", "caption": "酒店窗外：连片灰屋顶、车站的铁道场，再远是一线浅山。", "datetime": "2026-03-14T10:17:00"}, "photo_0005": {"src": "assets/photo_0005.jpg", "caption": "街角一抬头就是京都塔，出租车排成一列，路边的树还光着枝。", "datetime": "2026-03-14T13:08:00"}, "photo_0006": {"src": "assets/photo_0006.jpg", "caption": "鴨川的黄昏，人沿河岸坐成一长排，对岸町屋的灯在水面上发抖。", "datetime": "2026-03-14T14:25:00"}, "photo_0007": {"src": "assets/photo_0007.jpg", "caption": "酒店桌上的便利店晚饭——饭团、便当、玄米茶，和一堆充电线、小票。", "datetime": "2026-03-14T15:42:00"}, "photo_0010": {"src": "assets/photo_0010.jpg", "caption": "京都駅地下美食层，背着包、拖着箱子挑便当的一对。", "datetime": "2026-03-14T18:33:00"}, "photo_0011": {"src": "assets/photo_0011.jpg", "caption": "清水寺仁王門和朱红三重塔，台阶上挤满人，樱花刚开了个头。", "datetime": "2026-03-15T09:50:00"}, "photo_0012": {"src": "assets/photo_0012.jpg", "caption": "清水の舞台，木栏外是整座京都，远处京都塔细得像根针。", "datetime": "2026-03-15T10:07:00"}, "photo_0013": {"src": "assets/photo_0013.jpg", "caption": "産寧坂的石阶，半路一树樱，店门口挂着白纸伞。", "datetime": "2026-03-15T11:24:00"}, "photo_0014": {"src": "assets/photo_0014.jpg", "caption": "二年坂的陶器店，蓝白饭碗在木桌上摞成小山。", "datetime": "2026-03-15T12:41:00"}, "photo_0015": {"src": "assets/photo_0015.jpg", "caption": "绿釉碗里的抹茶，旁边一只樱花形的和菓子，窗外是青苔。", "datetime": "2026-03-15T13:58:00"}, "photo_0016": {"src": "assets/photo_0016.jpg", "caption": "寺院的枯山水，白砂耙出纹路，人坐在阴影里的木廊上，墙在晒太阳。", "datetime": "2026-03-15T14:15:00"}, "photo_0018": {"src": "assets/photo_0018.jpg", "caption": "八坂の塔在落日里成了剪影，民居屋顶连成一片，店口的灯笼亮起。", "datetime": "2026-03-15T16:49:00"}, "photo_0019": {"src": "assets/photo_0019.jpg", "caption": "祇園的小巷，一盏圆纸灯笼、一辆停着的自行车，湿石板把光照回来。", "datetime": "2026-03-15T17:06:00"}, "photo_0020": {"src": "assets/photo_0020.jpg", "caption": "手拭巾铺子，藤花、金鱼、猫头鹰的花样在木台上摊开。", "datetime": "2026-03-15T18:23:00"}, "photo_0021": {"src": "assets/photo_0021.jpg", "caption": "竹林の道，竹子在头顶合拢，光是绿的，人顺着木栏往里走。", "datetime": "2026-03-16T09:40:00"}, "photo_0022": {"src": "assets/photo_0022.jpg", "caption": "渡月橋横过桂川，木栏一路弯到对岸的山脚下。", "datetime": "2026-03-16T10:57:00"}, "photo_0023": {"src": "assets/photo_0023.jpg", "caption": "桂川的河岸，水是冷青绿色，几条带篷的游船浮着，对岸坡上点着樱。", "datetime": "2026-03-16T11:14:00"}, "photo_0025": {"src": "assets/photo_0025.jpg", "caption": "湯豆腐的昼饭，砂锅在小火上冒泡，配米饭、湯叶和一桌小碟。", "datetime": "2026-03-16T13:48:00"}, "photo_0026": {"src": "assets/photo_0026.jpg", "caption": "苔生的小寺，茅葺的门里一条石径，光从竹叶间漏下来。", "datetime": "2026-03-16T14:05:00"}, "photo_0028": {"src": "assets/photo_0028.jpg", "caption": "紫色的嵐電过小路口，住宅区安安静静，路边一树樱花开着。", "datetime": "2026-03-16T16:39:00"}, "photo_0029": {"src": "assets/photo_0029.jpg", "caption": "京都駅的站台，蓝色时刻里新干线停着，旅人沿黄线排队。", "datetime": "2026-03-16T17:56:00"}, "photo_0030": {"src": "assets/photo_0030.jpg", "caption": "从高处看京都駅的大堂，夜里店铺都亮着，钢架顶罩住整片光。", "datetime": "2026-03-16T18:13:00"}}</script>
 </body></html>
