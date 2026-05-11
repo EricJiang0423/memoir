@@ -266,23 +266,42 @@ trip-design **没有 HTML 模板**——你是策展人 + 前端设计师。每�
 3. **视觉温度**：冷静深沉（蓝/灰/留白）还是温暖亲近（金/橙/满版）？从入册首张照片取色确定主色调
 4. **容量估算**：X 天 / Y 张照片 / Z 字叙述 → 每张照片分多少空间？
 
-**Junior Designer Mode**（写 HTML 前的策略）：
+**设计方向推荐**（新增，必做）：
 
-1. **先写注释，再写代码**：在 HTML 开头用 `<!-- 设计假设 -->` 注释写清美学决定和推理链条
-2. **灰色占位优先**：先用 div 灰块确认布局节奏，再替换为真实 token 和文案
-3. **Placeholder > Bad Implementation**：不确定时留 `<!-- TODO: 意图 -->`，不要硬塞
+根据四定位回答 + 照片气质，从 `designs/` 目录匹配 2-3 个方向，做成选择让用户挑：
 
-**开工前**三份 reference 必读：
+```
+我从这次京都的照片看到的气质是「冷调的春寒、反复出现的黄昏」，
+适合的方向：
+1) 大画册（heavy amber）—— 深棕底、照片贴卡纸、像博物馆图录
+2) 宽银幕（cinematic）—— 黑底宽幅、像电影分镜、几乎没有文字
+3) 极简白（white space）—— 大量留白、照片缩小到 30vw 以下
+
+选一个，或告诉我你想要的感受。
+```
+
+**用户选完后**，读对应的 `designs/<name>.md` 作为 HTML 设计的主参考。不再默认使用任何统一布局。
+
+如果拿不准匹配哪个——让用户先看目录总览：
+
+```
+推荐阅读 designs/README.md（8 个方向一览），告诉我哪个气质最接近。
+```
+
+**用户选了后再进入 Junior Designer Mode。**
+
+**开工前 reference 必读：**
 1. `references/art-direction.md` —— 照片策展、艺术回忆结构、弱图剔除、地图降级规则
-2. `references/diary-html-essentials.md` —— 必备元素清单（hero / 地图 / 时间线 / 灯箱 / 自包含承诺）+ Token 协议（`trip-design://photo_NNNN`、`data-trip-design=”leaflet-css”` 等）
-3. `references/diary-design-aesthetics.md` —— 美学思维框架 + 四定位提问 + 字体配对 + Junior Designer Mode + 反前端 slop 速查
+2. `references/diary-html-essentials.md` —— **区块池 + Token 协议**：从池里选 2-4 个区块，不硬塞
+3. `references/diary-design-aesthetics.md` —— 美学框架 + 字体配对 + 反前端 slop
+4. `designs/<selected>.md` —— **用户选中的设计方向（主要执行参考）**
 
 **关键约束**（不可违反）：
 - 用 `src=”trip-design://photo_NNNN”` 引用照片（**不要**手嵌 base64——context 装不下）
-- 用 `<style data-trip-design=”leaflet-css”></style>` 与 `<script data-trip-design=”leaflet-js”></script>` 留 Leaflet 注入点
-- 用 `<script type=”application/json” data-trip-design=”photos-index”></script>` 与 `data-trip-design=”track”` 留数据注入点
-- 灯箱必须支持 `←` `→` `Esc` 键盘导航
+- 用 `<script type=”application/json” data-trip-design=”photos-index”></script>` 注入照片 JSON（必加）
 - 自包含：HTML 里**禁止** `<script src=”https://`、`<link href=”https://`、`<img src=”https://`
+- 只用地图时才加 `<style data-trip-design=”leaflet-css”>` 与 `<script data-trip-design=”leaflet-js”>`
+- 只用地图或路线才加 `data-trip-design=”track”` 数据注入
 
 **CSS 技术标准**（V1.3 升级）：
 - 标题 `text-wrap: balance`，正文 `text-wrap: pretty`，中文 `hanging-punctuation: first`
@@ -290,17 +309,18 @@ trip-design **没有 HTML 模板**——你是策展人 + 前端设计师。每�
 - hover 状态用 `color-mix()` 自动推导
 - 布局用 CSS Grid `subgrid` + `@container` 容器查询
 - 用 `:has()` 做上下文感知样式
-- 灯箱用 `backdrop-filter` 做毛玻璃蒙层
+- 灯箱用 `backdrop-filter` 做毛玻璃蒙层（如果用灯箱）
 - **一处 120% 细节**：选一个动画做到精致（hero 视差、标题 letter-spacing 渐入、照片 reveal），其余保持安静
 
 **字体配对**：从 `references/diary-design-aesthetics.md` 推荐的三组中选一组（Instrument Serif + Geist Sans / Cormorant Garamond + Inter Tight / JetBrains Mono + Geist Sans），或自创但不要重复上次的选择。
 
 **关键鼓励**：
-- **NEVER converge**——和上次的设计**故意不一样**；不要每次都用一样的字体、色调、布局
-- 地图只是索引，不是主角；默认用”主图 + 章节散文 + 少量 stills / 画册页”组织，不要默认照片瀑布流
+- **NEVER converge**——和上次的设计**故意不一样**；结构、字体、色调、布局四个维度至少两个不一样
+- **结构也要 NEVER converge**：不要每次 Hero → 地图 → 每日区块 → 灯箱 → 页脚；试试首页直接第一章、map 当 colophon、幻灯片格式、大留白分段、纯文字章节过渡……
 - 每个视觉区块必须有表达目的：不是为了展示更多照片，而是推进某个记忆、光线、地点质感或人物关系
 - 杀掉 AI slop：紫渐变、Inter/Roboto 当 display、圆角卡片+左 border accent、emoji 标题装饰、bento grid
 - 选一个 BOLD 美学方向**全力执行**，不要折中
+- **结构多样性 > 功能完整性**：宁可砍掉地图 / 灯箱 / 页脚其中之一，也不要为了"完整"套一个千篇一律的骨架
 
 写完 HTML 文件保存到 `output/trip.diary.draft.html`（或任意路径），然后进入 Step 7b。
 
@@ -558,7 +578,7 @@ trip-design 的 slop 风险有三个面向：**相册导出化**（全放、乱�
 
 2. **禁止删除项目源代码**
    - `scripts/`、`references/` 下的任何文件
-   - `SKILL.md`、`README.md`、`requirements.txt` 等
+   - `SKILL.md`、`CLAUDE.md`、`requirements.txt` 等
 
 3. **禁止静默删除**
    - 任何 `rm`、`os.remove()`、`shutil.rmtree()` 操作必须先列出文件清单

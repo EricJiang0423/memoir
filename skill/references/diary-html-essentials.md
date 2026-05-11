@@ -1,58 +1,91 @@
-# diary-html-essentials · 必备元素清单与 Token 协议
+# diary-html-essentials · 区块池与 Token 协议
 
-trip-design **没有 HTML 模板**——每次生成时由 Claude 现场用前端能力设计。本文档定义两件事：
+memoir **没有 HTML 模板**——每次生成时由 Claude 现场用前端能力设计。本文档定义两件事：
 
-1. **必备元素清单**：哪些区块必须有（用户期望的"旅行日记"核心结构）
+1. **区块池**：一份可用区块清单，每次从中选 2-4 种组合页面，不要固定套路
 2. **Token 协议**：Claude 写的 HTML 如何与 `build_diary.py` 后处理器协作（base64 照片注入、Leaflet inline、JSON 数据注入）
 
 设计风格 / 配色 / 字体 / 排版**完全由 Claude 自由发挥**——见 `references/diary-design-aesthetics.md`。
 
 ---
 
-## 必备元素（缺一不可）
+## 核心原则：结构服务表达
 
-旅行日记 HTML 必须包含以下五个区块。**布局、视觉、动画、文案位置**全部由 Claude 决定，但**这些区块都要有**——它们是用户对"旅行日记"的最低期望。
+页面结构**不能重复**。不要每次都是 `Hero → 地图 → 每日区块 → 灯箱 → 页脚`。
 
-重要：这些是功能性必备元素，不是页面结构模板。不要默认做成 `hero + 大地图 + 时间线 + 全量照片 grid`。艺术回忆页应优先由 `references/art-direction.md` 的策展结构决定；地图和时间线可以缩小为索引。
+问自己：**如果每页都必须换一种结构，这次会怎么做？**
 
-### 1. Hero 区（封面）
+- 如果只有 1 天 8 张照片 → 一张长卷滚动画廊就够了，不需要分天
+- 如果是在东京跨年 → 一页照片的蓝色时间 + 霓虹 collage + 一行路线就够了，不要分章节
+- 如果是公路旅行 → 路线图可以当主轴，照片挂在路线旁边
+- 如果是探店 / 美食旅行 → 按食物类型分（早餐 / 食堂 / 宵夜），不要按地点
 
-- 全屏或半屏的视觉主图
-- 旅行总标题（`trip_summary.title`）
+**结构也是设计决策**，和字体颜色一样重要。
+
+---
+
+## 区块池（每次选 2-4 个组合）
+
+以下区块可用，但不是都用，更不是按这个顺序用。选什么取决于这次旅行的气质和照片结构。
+
+### A · 开场 Hero
+
+- 全屏 / 半屏视觉主图 或 文字排版 + 色块
+- 旅行标题（`trip_summary.title`）
 - 日期范围（`trip_summary.date_range`）
-- 至少一项摘要：照片数 / 城市 / 天数
+- 可选给出天数 / 城市数 / 照片数等摘要
+- **不是必须全屏**——也可以是一个对角色块、一页大字幕、一组封面小图 mosaic
 
-### 2. 全程地图
+### B · 叙述章节
 
-- 地图容器（必须 id 或 class 让 Claude 自己的 JS 能初始化 Leaflet）
-- 全程 GPS 轨迹线（来自 `all_gps_points`）
-- 各地点标记（标记 placement 由 Claude 决定，但要点击/悬停能看见地名）
-- 地图是辅助索引，不是默认主角；地点聚类不稳定时，地图可以小型化、后置，或只显示粗路线
+每日标题 + 每日叙述（`days[].title` + `days[].narrative`）+ 该日照片。
 
-### 3. 时间线（按天）
+**不一定要按日期顺序**。可以是：
 
-每天至少展示：
-- Day N 标识 / 日期
-- 每日标题（`days[].title`）
-- 每日叙述（`days[].narrative`）
-- 当天的地点链路（`days[].locations[].place_name` 用 `→` 或其他视觉连接）
-- 每个地点的照片网格（`days[].locations[].photos`）
+- 按视觉主题（青色的一天 / 金色的一天 / 蓝色黄昏）
+- 按情绪线（到达 → 沉浸 → 离开）
+- 跨天混编（把所有晴天照片并成一个"晴天"章节、雨天的并成另一个）
+- 只写 2 个章节而非每天一段
 
-这里的“照片网格”不是要求均匀铺满所有照片。可以是主图、stills、film strip、局部细节栏或画册跨页。关键是每个章节的入册照片都能被打开灯箱，而不是把照片按同一尺寸罗列。
+照片展现方式可以是主图 + stills、并排 film strip、跨页画册、自由 collage、滚动横向走廊——**任何形式都行，不要重复上次的**。
 
-### 4. 灯箱（点开大图）
+### C · 路线索引（可选）
 
-- 点击照片打开大图视图
-- **键盘约定**（不可省略）：
-  - `←` / `→` 切换上一张 / 下一张
-  - `Esc` 关闭
-- 显示 caption（如有）与拍摄时间
+一张地图或一条路线示意。**不是必须的**：
 
-### 5. 页脚（自包含承诺标记）
+- 一天都在一平方公里内走的（祇園 / 东山 / 下北泽）→ 不需要地图
+- GPS 精度差或无轨迹 → 不要硬塞
+- 跨城旅行（东京→大阪）→ 可以放小地图当索引
+- 公路旅行 / 自驾 → 地图可以当主轴
 
-至少一行说明：
-- 由 trip-design 生成
-- 所有处理本地完成 / 仅 GPS 用于地名查询
+如果用地图，仍用 Leaflet（Token 协议见下方）。地图可以后置、缩小、化身迷你路线图、或者干脆一行简单的时间路线文字替代。
+
+### D · 灯箱（可选但不是摆设）
+
+如果照片 ≤ 8 张，可以全部 inline 展示，不用灯箱。
+如果照片 > 8 张，需要有放大看细节的机制，但不一定是全场灯箱——也可以是锚点跳转 / sidebar 大图切换 / accordion。
+
+如果用灯箱，键盘 `← → Esc` 切换是**强推荐**（无障碍），但允许降级为点击箭头。
+如果照片是全屏展示的（全屏 slideshow 形式），则不需要额外灯箱。
+
+### E · 收尾（极简）
+
+至少一行字标明生成工具 + 隐私说明。可以小到像 colophon 版权字一样不起眼。不用单独设计一整块。
+
+### F · 间距与留白
+
+空白本身也是区块。大留白、满出血、章节间的色彩过渡页（全色块/全黑/全图）——这些都是可选的结构元素。
+
+---
+
+## 结构多样性检查
+
+写完 HTML 前过一遍：
+
+- 这次的结构和上次**明显不同**。（如果是第一次生成，和假想的默认模板不同）
+- 我选的 2-4 个区块有表达理由，不是"因为文档写了所以都放"。
+- 这个结构是为这次旅行的照片定制的，不是套任何模板。
+- 如果我把地图拿掉，页面还能成立吗？如果必须加地图才能支撑页面，说明结构太弱。
 
 ---
 
@@ -76,6 +109,8 @@ Claude 写 HTML 时**不能**手嵌 base64 照片（context 装不下）、**不
 **规则**：只在 `<img src=>` 与 CSS `background: url(...)` 里用这个 scheme。**不要**在 JS 里拼字符串引用——见下方"灯箱里如何用"。
 
 #### B · Leaflet 库注入 → 空标签 + data 属性
+
+**只有决定用地图才加，不用地图就不加。**
 
 ```html
 <style data-trip-design="leaflet-css"></style>
@@ -110,14 +145,14 @@ const TRACK = JSON.parse(document.querySelector('[data-trip-design="track"]').te
 
 ### Token 一览表
 
-| 用途 | 写法 | 后处理填什么 |
-|------|------|-------------|
-| 照片 src | `<img src="trip-design://photo_0001">` | `data:image/jpeg;base64,...` 或 relative path |
-| 照片 CSS 背景 | `background: url("trip-design://photo_0001")` | 同上 |
-| Leaflet CSS | `<style data-trip-design="leaflet-css"></style>` | Leaflet 1.9.4 CSS 字节 |
-| Leaflet JS | `<script data-trip-design="leaflet-js"></script>` | Leaflet 1.9.4 JS 字节 |
-| 照片索引 JSON | `<script type="application/json" data-trip-design="photos-index"></script>` | 完整 photos 字典 |
-| GPS 轨迹 JSON | `<script type="application/json" data-trip-design="track"></script>` | `all_gps_points` 数组 |
+| 用途 | 写法 | 后处理填什么 | 必须？ |
+|------|------|-------------|--------|
+| 照片 src | `<img src="trip-design://photo_0001">` | `data:image/jpeg;base64,...` 或 relative path | ✅ 必须 |
+| 照片 CSS 背景 | `background: url("trip-design://photo_0001")` | 同上 | ✅ 必须 |
+| Leaflet CSS | `<style data-trip-design="leaflet-css"></style>` | Leaflet 1.9.4 CSS 字节 | ❌ 只用地图才加 |
+| Leaflet JS | `<script data-trip-design="leaflet-js"></script>` | Leaflet 1.9.4 JS 字节 | ❌ 只用地图才加 |
+| 照片索引 JSON | `<script type="application/json" data-trip-design="photos-index"></script>` | 完整 photos 字典 | ✅ 必须（灯箱/JS 需要） |
+| GPS 轨迹 JSON | `<script type="application/json" data-trip-design="track"></script>` | `all_gps_points` 数组 | ❌ 有地图或路线才加 |
 
 ---
 
@@ -165,8 +200,8 @@ Claude 在策展和叙述步骤已经回填好入册照片、标题、叙述与 
 
 **字段说明**：
 - `caption` 仅在 ≤ 30 张时由 Claude 写；缺失时 Claude 设计 HTML 时不展示文字
-- `cover_photo_id` 是该层级的"代表照"——hero 用 `trip_summary.cover_photo_id`、day 标签用 `days[].cover_photo_id`
-- `map_track` 已按时间排序，可直接喂给 Leaflet polyline
+- `cover_photo_id` 是该层级的"代表照"
+- `map_track` 已按时间排序，可直接喂给 Leaflet polyline（不用地图时不需读取）
 
 ---
 
@@ -181,22 +216,17 @@ Claude 写的 HTML **必须**：
 | `<img src="https://...">` 引用网图 | 不需要——只用 `trip-design://` 引用真实照片 |
 | `@import url(...)` 外部字体 | Web fonts 用 `data:` 编码或 system font stack |
 
-**唯一允许的在线依赖**：地图底图 tile（Leaflet 默认 OSM tile 服务器）。这是 trip-design 的设计取舍——见 `references/leaflet-inline.md`。
+**唯一允许的在线依赖**：地图底图 tile（Leaflet 默认 OSM tile 服务器），且只有决定放地图时才需要。
 
 后处理脚本会**最终验证**：搜索 `<script src="http`、`<link ... href="http`、`<img src="http`，命中即报错（这是双保险，不替代 Claude 的自律）。
 
 ---
 
-## 灯箱实现的最小约定
+## 灯箱实现的最小约定（仅当使用灯箱时）
 
-灯箱可以用任何视觉风格，但 JS 行为必须：
+灯箱可以用任何视觉风格，但 JS 行为如适用：
 
 ```javascript
-// 1. 点击 .photo-card / [data-photo-id] 等元素，打开灯箱
-// 2. 显示 PHOTOS[id].src 对应的大图
-// 3. 显示 caption 与 datetime
-// 4. 监听 keydown：← → Esc
-
 document.addEventListener('keydown', (e) => {
   if (!lightbox.classList.contains('open')) return;
   if (e.key === 'Escape') close();
@@ -205,7 +235,7 @@ document.addEventListener('keydown', (e) => {
 });
 ```
 
-切换上下一张时**全局有序**——所有照片按 day → location → 顺序串成一个数组。这样用户从第 50 张按 `→` 能到第 51 张，跨 location 不停顿。
+切换上下一张时**全局有序**——所有照片按 day → location → 顺序串成一个数组。
 
 ---
 

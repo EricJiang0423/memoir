@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>memoir · 旅行回忆录 skill — demo</title>
-<meta name="description" content="memoir 是一个 Claude Code skill：给定一组旅行照片，生成完全自包含的旅行回忆 HTML。这里是一份示例输出。">
+<meta name="description" content="memoir 是一个 Claude Code skill：给定一组旅行照片，按设计方向池生成不同视觉风格的旅行回忆 HTML。这里展示了同一组京都照片在 6 种设计方向下的不同面貌。">
 <style>
   :root{
     --ink:oklch(0.205 0.034 235); --paper:oklch(0.973 0.014 82);
@@ -16,31 +16,201 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
-    min-height:100svh; display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
-    gap:1.4rem; padding:clamp(2rem,8vw,7rem); background:var(--ink); color:var(--on-ink);
+    min-height:100svh; padding:clamp(2rem,6vw,5rem) clamp(1.5rem,5vw,4rem);
+    background:var(--ink); color:var(--on-ink);
     font-family:var(--sans); line-height:1.8; -webkit-font-smoothing:antialiased;
   }
-  .kicker{font-family:var(--mono);font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--accent)}
-  h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.2rem,6vw,4.4rem);line-height:1.1;letter-spacing:.02em;text-wrap:balance}
-  p{max-width:38rem;color:var(--on-ink-soft);text-wrap:pretty}
-  .go{
-    display:inline-flex;align-items:baseline;gap:.7rem;margin-top:.6rem;padding:.95rem 1.6rem;
-    border:1px solid color-mix(in oklch,var(--accent) 60%,transparent);border-radius:2px;
-    color:var(--on-ink);text-decoration:none;font-size:1.05rem;letter-spacing:.02em;
-    transition:background .2s ease,border-color .2s ease;
+  .kicker{font-family:var(--mono);font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,5vw,3.6rem);line-height:1.1;letter-spacing:.02em;text-wrap:balance}
+  h2{
+    font-family:var(--serif);font-weight:700;font-size:clamp(1.3rem,2.2vw,1.8rem);
+    letter-spacing:.04em;color:var(--on-ink);margin-bottom:.4rem;
   }
-  .go:hover{background:color-mix(in oklch,var(--accent) 24%,transparent);border-color:var(--accent)}
-  .go .arr{font-family:var(--mono);color:var(--accent)}
-  .meta{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;color:var(--on-ink-soft);margin-top:1.2rem}
+  .desc{max-width:42rem;color:var(--on-ink-soft);margin:.8rem 0 2.5rem;font-size:.95rem;text-wrap:pretty}
+  .desc a{color:var(--accent)}
+  .desc a:hover{color:color-mix(in oklch,var(--accent) 80%,white)}
+
+  .section-h{
+    font-family:var(--mono);font-weight:400;font-size:.72rem;letter-spacing:.25em;text-transform:uppercase;
+    color:var(--on-ink-soft);margin:2.8rem 0 1.2rem;display:flex;align-items:center;gap:1rem;
+  }
+  .section-h::after{content:"";flex:1;height:1px;background:oklch(0.945 0.013 86 / .12)}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;
+  }
+  .card{
+    border:1px solid oklch(0.945 0.013 86 / .10);border-radius:4px;overflow:hidden;
+    background:oklch(0.945 0.013 86 / .04);transition:border-color .2s ease,background .2s ease;
+    display:flex;flex-direction:column;
+  }
+  .card:hover{border-color:oklch(0.66 0.155 42 / .3);background:oklch(0.66 0.155 42 / .06)}
+  .card-preview{
+    aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;color:var(--on-ink-soft);
+    padding:1rem;text-align:center;line-height:1.6;overflow:hidden;
+  }
+  .card-body{padding:1rem 1.2rem 1.3rem;flex:1;display:flex;flex-direction:column}
+  .card-body h3{font-family:var(--serif);font-size:1.1rem;font-weight:600;letter-spacing:.03em;margin:0 0 .3rem}
+  .card-body .tag{
+    font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;color:var(--accent);text-transform:uppercase;
+    border:1px solid color-mix(in oklch,var(--accent) 40%,transparent);padding:.1rem .4rem;
+    display:inline-block;margin-bottom:.5rem;width:fit-content;
+  }
+  .card-body p{font-size:.82rem;line-height:1.7;color:var(--on-ink-soft);margin:0 0 .8rem;flex:1}
+  .card-body .vibe{font-family:var(--mono);font-size:.68rem;color:var(--on-ink-soft);letter-spacing:.04em;margin-bottom:.7rem}
+  .card-body a{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-family:var(--mono);font-size:.72rem;text-decoration:none;color:var(--accent);
+    padding:.4rem 0;
+  }
+  .card-body a:hover{color:color-mix(in oklch,var(--accent) 80%,white)}
+  .arr{font-size:1em}
+
+  .featured{
+    margin:2rem 0 1.5rem;padding:1.5rem 2rem;border:1px solid oklch(0.66 0.155 42 / .2);
+    border-radius:4px;background:oklch(0.66 0.155 42 / .06);
+    display:flex;align-items:center;flex-wrap:wrap;gap:1.2rem 2rem;
+  }
+  .featured .label{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+  .featured a{
+    color:var(--on-ink);text-decoration:none;font-family:var(--serif);font-size:1.15rem;letter-spacing:.03em;
+    border-bottom:1px solid transparent;transition:border-color .2s;
+  }
+  .featured a:hover{border-color:var(--accent)}
+  .featured .tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;color:var(--on-ink-soft);border:1px solid oklch(0.945 0.013 86 / .15);padding:.05rem .35rem}
+
+  .meta{font-family:var(--mono);font-size:.72rem;color:var(--on-ink-soft);margin-top:3rem;line-height:1.9}
   .meta a{color:var(--on-ink-soft)}
   .meta a:hover{color:var(--on-ink)}
+
+  .preview-heritage{background:#2a241c;color:#d4c9a8;font-family:STSong,serif;font-size:.8rem}
+  .preview-heritage span{display:block;border:1px solid #3d3428;outline:3px solid #d4c9a8;padding:.4rem;margin-bottom:.3rem}
+  .preview-notebook{background:#ede2d3;color:#3d3228;font-family:KaiTi,serif;font-size:.75rem}
+  .preview-notebook span{display:inline-block;background:#fff;padding:.2rem .3rem;box-shadow:0 1px 4px rgba(0,0,0,.1);transform:rotate(.5deg);margin:.15rem}
+  .preview-cinemascope{background:#000;color:#fff;font-family:SFMono-Regular,monospace;font-size:.7rem;letter-spacing:.15em}
+  .preview-cinemascope div{width:100%;height:60%;background:#111;display:flex;align-items:center;justify-content:center;margin-bottom:.3rem}
+  .preview-darkroom{background:#000;color:#444;font-family:SFMono-Regular,monospace;font-size:.55rem;letter-spacing:.1em;text-align:center}
+  .preview-darkroom .dr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:.2rem}
+  .preview-darkroom .dr-grid span{background:#111;aspect-ratio:3/2;display:block;filter:grayscale(1);opacity:.6}
+  .preview-zine{background:#f2ece4;color:#111;font-family:"Times New Roman",serif;font-size:.65rem;position:relative;padding:0}
+  .preview-zine .z-p{display:inline-block;border:1.5px dashed #888;background:#fff;position:absolute;aspect-ratio:3/2}
+  .preview-whitespace{background:#fff;color:oklch(.3 .02 250);font-family:"Songti SC",serif;font-size:.7rem;justify-content:flex-start!important;padding-top:1rem!important}
+  .preview-whitespace span{display:block;width:35%;aspect-ratio:3/2;background:oklch(.92 .005 85);margin:.3rem auto .1rem}
+
+  @media (max-width:700px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
   <p class="kicker">memoir · 旅行回忆录 skill</p>
-  <h1>京都三日，<br>坂道与黄昏</h1>
-  <p>这是 <strong style="color:var(--on-ink);font-weight:400">memoir</strong> —— 一个 Claude Code skill —— 的一份示例输出：给定一组旅行照片（这份 demo 用的 30 张京都照片由 <strong style="color:var(--on-ink);font-weight:400">OpenAI GPT Image 2.0</strong> 生成，是合成图、非真实照片），它会提取 EXIF、反查地名、自动聚类、艺术策展、撰写基于照片内容的叙述，最后生成一份**完全自包含的旅行回忆 HTML**（单文件，拖进浏览器即可打开）。</p>
-  <a class="go" href="./demos/kyoto-3-days.diary.html"><span>进入这次旅行</span><span class="arr">→</span></a>
-  <p class="meta">示例文件约 22 MB（照片 base64 内嵌；首次加载稍慢）· 图片由 GPT Image 2.0 生成 · <a href="https://github.com/EricJiang0423/memoir">查看 skill 仓库 ↗</a></p>
+  <h1>京都三日 —<br>同一组照片，六种设计</h1>
+  <p class="desc">
+    这份 demo 展示了 memoir 的**设计方向池**：同一组 30 张京都照片（由 OpenAI GPT Image 2.0 生成），经过提取→聚类→策展→叙述后，用 6 种不同的 <code>design.md</code> 规格生成完全不同的页面结构、色彩体系和浏览体验。
+    <a href="https://github.com/EricJiang0423/memoir">查看 skill 仓库 ↗</a>
+  </p>
+
+  <div class="featured">
+    <span class="label">首次 demo</span>
+    <a href="./demos/kyoto-3-days.diary.html">京都三日，坂道与黄昏</a>
+    <span class="tag">base64 自包含 · 22 MB</span>
+    <span style="font-family:var(--mono);font-size:.65rem;color:var(--on-ink-soft)">这份之前的 demo 作为参考基准保留</span>
+  </div>
+
+  <h2 class="section-h">设计方向 · 6 个变体</h2>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-preview preview-heritage">
+        <span style="writing-mode:vertical-rl;letter-spacing:.3em;font-size:.6rem">大 画 册</span>
+        <span style="flex:1;text-align:right;font-size:.55rem">Day 01<br>──<br>京都駅</span>
+      </div>
+      <div class="card-body">
+        <span class="tag">厚重 · 典藏</span>
+        <h3>大画册</h3>
+        <p class="vibe">深棕底 · 米黄面纸 · 照片贴卡纸 · 无地图无灯箱</p>
+        <p>像博物馆的藏品图录。跨页对开、章节衬页、手写标签。深色底让照片像贴在纸面上。</p>
+        <a href="./demos/kyoto-heritage.html">打开大画册版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview preview-notebook">
+        <span>✎</span><span>Day 01</span><br>
+        <span>京都駅</span><span>鴨川</span><span>夜</span>
+      </div>
+      <div class="card-body">
+        <span class="tag">私人 · 手写感</span>
+        <h3>旅行手帐</h3>
+        <p class="vibe">牛皮纸色 · 拍立得白框 · 楷体正文</p>
+        <p>像野外笔记本——拍立得白边照片、手写体、胶带条。不完美但有人味。</p>
+        <a href="./demos/kyoto-notebook.html">打开手帐版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview preview-cinemascope">
+        <div>— DAY 01 —</div>
+        <span style="font-size:.55rem;opacity:.5">〰 鴨川の黄昏 〰</span>
+      </div>
+      <div class="card-body">
+        <span class="tag">电影感 · 沉浸</span>
+        <h3>宽银幕</h3>
+        <p class="vibe">纯黑底 · 等宽字体 · 宽画幅 · 无段落全文</p>
+        <p>像一部短片的分镜脚本。黑场过渡、满出血 21:9 照片、几乎无文字、自动播放节奏。</p>
+        <a href="./demos/kyoto-cinemascope.html">打开宽银幕版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview preview-darkroom">
+        <div class="dr-grid"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <span>contact sheet</span>
+      </div>
+      <div class="card-body">
+        <span class="tag">粗粝 · 高反差</span>
+        <h3>暗房</h3>
+        <p class="vibe">纯黑底 · 黑白滤镜 · 接触印相 · 无文字</p>
+        <p>暗房里冲出来的接触印相。3×2 网格、full-bleed 单页交替。照片本身是唯一语言。</p>
+        <a href="./demos/kyoto-darkroom.html">打开暗房版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview preview-zine">
+        <span class="z-p" style="width:40%;top:5%;left:5%"></span>
+        <span class="z-p" style="width:30%;top:15%;right:10%"></span>
+        <span class="z-p" style="width:35%;bottom:10%;left:15%"></span>
+        <span class="z-p" style="width:28%;bottom:8%;right:12%"></span>
+      </div>
+      <div class="card-body">
+        <span class="tag">复印机 · 拼贴</span>
+        <h3>Zine 小志</h3>
+        <p class="vibe">粗面纸白 · 虚线框 · 照片重叠 · 复印滤镜</p>
+        <p>在咖啡店 photocopier 上自己印的小册子。照片旋转重叠、文字浮在图片上、粗虚线裁切标记。</p>
+        <a href="./demos/kyoto-zine.html">打开 Zine 版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-preview preview-whitespace">
+        <span></span>
+        <span style="font-size:.55rem;color:oklch(.6 .02 250)">京都駅 ── 09:18</span>
+      </div>
+      <div class="card-body">
+        <span class="tag">留白 · 克制</span>
+        <h3>极简白</h3>
+        <p class="vibe">纯白底 · 极浅灰字 · 照片 30vw · 无地图无灯箱</p>
+        <p>每页只有一件事：一张小照片、一句短的句子、或一个空的章节标题。留白是真正的主角。</p>
+        <a href="./demos/kyoto-whitespace.html">打开极简白版本 <span class="arr">→</span></a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="meta">
+    所有 6 个变体使用相同的 23 张精选照片和叙述文本，共用 <code>demos/assets/</code> 照片目录（约 8 MB）<br>
+    加载时浏览器需在同级目录 <code>demos/assets/</code> 找到照片文件 · 全部 <strong>~1.5 MB HTML 总大小</strong><br>
+    <a href="https://github.com/EricJiang0423/memoir">查看 skill 仓库 ↗</a>
+  </p>
 </body>
 </html>

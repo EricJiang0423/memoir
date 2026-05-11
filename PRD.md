@@ -1,11 +1,12 @@
 # trip-design · 产品需求文档
 
-> **实现状态（2026-05-11）**：V1.3 规划中。
+> **实现状态（2026-05-11）**：V1.3 已交付，V1.4 设计中。
 >
 > - **V1.0**：SKILL.md + scripts/（5 个）+ Jinja2 template + references/（7 个）+ test-prompts.json
 > - **V1.1**：Photos.app 「一键时间范围模式」（相对日期 today / last-week / last-month / YYYY-MM 等 + `--list-recent-trips` 启发式发现潜在旅行段）
 > - **V1.2**：架构重构——**移除 HTML 模板**，改为 Claude 现场设计 + `build_diary.py` 做 token 后处理（base64 / Leaflet / JSON 注入）。新增 `references/diary-html-essentials.md`（必备元素 + Token 协议）与 `references/diary-design-aesthetics.md`（美学方向 + 反前端 slop）。设计哲学参考 [Claude Code frontend-design skill](https://github.com/anthropics/claude-code/tree/main/plugins/frontend-design/skills/frontend-design)：「NEVER converge on common choices」
 > - **V1.3**：多模态策展增强（`curate.py` 品质预检 + contact sheet）+ huashu-design 设计范式深化（四定位提问 / Junior Designer Mode / 字体配对 / CSS 技术升级）
+> - **V1.4**（当前）：设计方向池（`skill/designs/`）——将设计多样性从"Claude 每次靠灵感"升级为"系统性地储备差异化的方向.md"，每次执行推荐 2-3 个让用户选。仓库结构重构：skill 核心移入 `skill/` 自包含目录，demo/部署文件留在根层。
 
 ## 产品概述
 
@@ -92,11 +93,11 @@ Claude 负责：
 
 **核心要求**：完全自包含，单文件，拖入浏览器即可打开
 
-**架构**（V1.2 重构）：**没有固定 HTML 模板**——Claude 每次按这次旅行的气质现场设计 HTML，`build_diary.py` 只做 token 后处理。
+**架构**（V1.2 重构 + V1.4 方向池）：**没有固定 HTML 模板**——用户从 `skill/designs/` 选择一个设计方向，Claude 按该方向的 spec 现场设计 HTML，`build_diary.py` 只做 token 后处理。
 
 | 特性 | 实现方式 |
 |------|---------|
-| HTML 设计 | Claude 现场写（按 `references/diary-html-essentials.md` 必备元素 + `diary-design-aesthetics.md` 美学指南） |
+| HTML 设计 | 用户从 `skill/designs/` 选方向 → Claude 按该方向的 .md spec 执行（布局 archetype / 色彩 / 字体 / 照片处理 / 动画） |
 | 照片嵌入 | Claude HTML 写 `src="trip-design://photo_NNNN"` token；后处理替换为 base64 或相对路径 |
 | Leaflet | Claude HTML 留 `<style data-trip-design="leaflet-css"></style>` 等空标签；后处理注入 1.9.4 字节 |
 | 数据注入 | Claude HTML 留 `<script type="application/json" data-trip-design="track"></script>` 等空标签；后处理注入 JSON |
@@ -107,16 +108,25 @@ Claude 负责：
 
 ---
 
-## 页面结构需求
+## 页面结构
 
-```
-[英雄区]    封面照全屏，渐变遮罩，旅行标题 + 日期范围 + 照片总数
-[总览地图]  全程 GPS 轨迹线 + 各地点标记（聚合显示）
-[时间线]    按天折叠/展开
-  └─ [Day N]  日期 + 地点路径（A → B → C）+ 日叙述文字
-     └─ [地点块]  地点标题 + 停留时间 + 照片 Grid
-        └─ [照片]  点击打开灯箱（←→ 键 + Esc 键盘导航）
-```
+**不限定固定页面结构**。结构由用户选择的设计方向决定。`skill/designs/` 中的每个方向定义了独立的布局 archetype，方向之间结构必须不同。
+
+参考方向示例的结构差异：
+
+| 方向 | 核心布局 | 地图 | 灯箱 | 叙述段落 |
+|------|---------|------|------|---------|
+| 大画册 | 跨页对开 + 章节衬页 | ❌ 无 | ❌ 无 | ✅ 短 |
+| 旅行手帐 | 跨页日记 + 拼贴资料页 | ❌ 无 | ❌ 无 | ✅ 有 |
+| 宽银幕 | 黑场 → 宽画幅 → 三连帧 | 可选收尾 | 可选 | ❌ 无散文 |
+| 暗房 | 接触印相网格 ↔ 全幅单页 | ❌ 无 | ❌ 无 | ❌ 无 |
+| Zine 小志 | 照片重叠拼贴 + 文字浮动 | ❌ 无 | ❌ 无 | ✅ 穿插 |
+| 极简白 | 单张照片独占一页 | ❌ 无 | ❌ 无 | ✅ 短 |
+
+**硬约束**（所有方向统一遵守）：
+- 单文件 HTML，照片 base64 内嵌（或 relative 模式）
+- 无外部 script/link/img src 引用（除 OSM 瓦片）
+- `trip-design://photo_NNNN` Token 协议 + `photos-index` JSON 注入
 
 ---
 
@@ -169,7 +179,11 @@ Claude: 询问输入源（文件夹 / Photos.app 相册）
         ↓
         聚类（cluster.py）→ 🛑 展示行程概览，请用户确认
         ↓
-        Claude 分析数据 + 视觉采样照片 → 撰写叙述，填充 diary_data.json
+        Claude 分析数据 + 视觉采样照片 → 撰写叙述，填写 diary_data.json
+        ↓
+        从 skill/designs/ 推荐 2-3 个设计方向 → 用户选择
+        ↓
+        Claude 按选中的 design.md 执行（布局 / 色彩 / 字体 / 照片处理 / 动画）
         ↓
         生成 HTML（build_diary.py）→ 🛑 报告路径和体积；> 200MB 询问切 relative
 ```
@@ -234,5 +248,15 @@ Claude: 自动 dry-run 预检（--date-range last-week --dry-run）
 | 依赖 | `requirements.txt` | ✓ 新增 opencv-python-headless / imagehash / scipy |
 
 **V1.2 已删除**：`assets/diary-template.html`（固定模板，违背"NEVER converge"）。
+
+## V1.4 交付清单（当前）
+
+| 模块 | 文件 | 状态 |
+|------|------|------|
+| 设计方向池 | `skill/designs/*.md` | ✓ 新增 6 个设计方向（大画册/旅行手帐/宽银幕/暗房/Zine 小志/极简白），每个含独立布局 archetype + 色彩/字体/动画 spec |
+| 方向推荐流程 | `SKILL.md` Step 7a | ✓ 新增"设计方向推荐"子步骤：推荐 → 用户选 → 按 spec 执行 |
+| HTML 必备放宽 | `references/diary-html-essentials.md` | ✓ 5 个硬性必备区块 → 6 个可选区块池，选 2-4 个组合 |
+| 仓库重构 | 根层 | ✓ skill 核心移入 `skill/` 自包含目录；demo/部署/dev 文档留在根层 |
+| 响应式修复 | `demos/kyoto-3-days.diary.html` | ✓ 图片高度固定→max-height + auto；1100px / 780px / 520px 三断点；移动端触摸滑动 |
 
 **待真实环境验证**：HEIC/RAW 解码（依赖 `brew install libheif` + `pip install pillow-heif`）；Photos.app 模式（需「完全磁盘访问」授权）；跨 agent dry-run（Codex / Cursor）。
