@@ -101,7 +101,7 @@ python3 skill/scripts/import_design.py --list
 
 ### 隐私是架构，不是功能
 
-照片字节**绝不离开本机**。唯一发出的数据是 GPS 坐标（两位小数精度）→ OpenStreetMap Nominatim 做地名查询。EXIF 解析、图片缩放、聚类、base64 编码、Claude 多模态视觉采样全部在本地完成。
+照片字节除了多模态大模型阅读以外**绝不离开本机**。唯一发出的数据是 GPS 坐标（两位小数精度）→ OpenStreetMap Nominatim 做地名查询和大模型多模态视觉采样。EXIF 解析、图片缩放、聚类、base64 编码全部在本地完成。
 
 ### 自包含承诺
 
