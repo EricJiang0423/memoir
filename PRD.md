@@ -247,6 +247,48 @@ Claude: 自动 dry-run 预检（--date-range last-week --dry-run）
 | 艺术策展 | `references/art-direction.md` | ✓ V1.3 升级：多模态策展流水线章节 + UI 截图检测 |
 | 依赖 | `requirements.txt` | ✓ 新增 opencv-python-headless / imagehash / scipy |
 
+### V1.3 Apple Photos 智能参数（osxphotos 读取的 Photos.sqlite 字段）
+
+V1.3 新增 `extract_photos.py` 在 Photos.app 模式下通过 osxphotos SDK 读取 Apple 端侧 ML 评分。这些评分来自 Photos.sqlite 中由 `mediaanalysisd` 后台计算的 27 维美学向量。数据结构如下：
+
+```python
+apple_score = {
+    # 综合评分（ZOVERALLAESTHETICSCORE 派生）
+    "overall": float,                # 0-1，整体美学质量
+    "curation": float,               # 0-1，Apple 建议是否在"回忆"中展示
+    "promotion": float,              # 0-1，建议在 widget/精选位展示
+    
+    # 构图维度
+    "pleasant_composition": float,   # 构图愉悦度
+    "well_framed_subject": float,    # 主体取景
+    "sharply_focused_subject": float,# 主体清晰度
+    "well_timed_shot": float,        # 拍摄时机（连拍中选帧质量）
+    "interesting_subject": float,    # 主体趣味性
+    
+    # 光线与色彩
+    "pleasant_lighting": float,      # 光线品质
+    "harmonious_color": float,       # 色彩和谐度
+    
+    # 品质衰减
+    "noise": float,                  # 噪点级别（越高越差）
+    "failure": float,                # 失败评分（越高质量越差）
+}
+```
+
+**说明**：
+- `overall` 是主排序指标，`curation` 用于预筛选预判
+- `failure` > 0.5 的照片通常是模糊、过曝/欠曝、失焦等废片
+- 只有 Photos.app 模式有这些评分；`--folder` 模式下 `apple_score` 为 `null`，走 OpenCV Laplacian 方差回退（`curate.py`）
+
+**元数据标记**（直接映射自 Photos.sqlite 字段）：
+
+| 字段 | SQLite 来源 | 含义 | 用途 |
+|------|------------|------|------|
+| `is_screenshot` | `ZADDITIONALASSETATTRIBUTES.ZISPUBLICLIBRARYSCREENSHOT` | UI 截图标记 | `prefilter.py` 自动排除 |
+| `is_favorite` | `ZFAVORITE` | 用户收藏标记 | `prefilter.py` 加权保留 |
+| `is_hidden` | `ZHIDDEN` | 用户隐藏标记 | `prefilter.py` 自动排除 |
+| `persons[]` | `ZPERSON.ZFULLNAME`（经 osxphotos 解析）| 已命名人物名单 | `prefilter.py --persons` 按人物筛选/加权 |
+
 **V1.2 已删除**：`assets/diary-template.html`（固定模板，违背"NEVER converge"）。
 
 ## V1.4 交付清单（当前）
@@ -254,6 +296,8 @@ Claude: 自动 dry-run 预检（--date-range last-week --dry-run）
 | 模块 | 文件 | 状态 |
 |------|------|------|
 | 设计方向池 | `skill/designs/*.md` | ✓ 新增 6 个设计方向（大画册/旅行手帐/宽银幕/暗房/Zine 小志/极简白），每个含独立布局 archetype + 色彩/字体/动画 spec |
+| 方向导入机制 | `scripts/import_design.py` + `designs/TEMPLATE.md` | ✓ 导入/校验/注册外部设计方向；本地文件或 GitHub URL；校验 9 个必填章节 + `layout_type` 唯一性；自动更新索引 |
+| 元数据标注 | `skill/designs/*.md` | ✓ 每个设计文件末尾增加 `<!--META-->` 元数据块（name / vibe / layout_type / has_map / has_lightbox / tags），支持自动匹配推荐 |
 | 方向推荐流程 | `SKILL.md` Step 7a | ✓ 新增"设计方向推荐"子步骤：推荐 → 用户选 → 按 spec 执行 |
 | HTML 必备放宽 | `references/diary-html-essentials.md` | ✓ 5 个硬性必备区块 → 6 个可选区块池，选 2-4 个组合 |
 | 仓库重构 | 根层 | ✓ skill 核心移入 `skill/` 自包含目录；demo/部署/dev 文档留在根层 |

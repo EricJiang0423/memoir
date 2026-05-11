@@ -74,3 +74,14 @@
 ## 推荐理由
 
 选这个方向当且仅当：用户的照片是随性的、不是认真拍的、旅行本身是和朋友一起的松散活动。如果用户说"不想太正式"、"想要点态度"——这是那个方向。
+
+<!--META-->
+name: Zine 小志
+name_en: zine
+vibe: 复印感、拼贴、逆向
+layout_type: collage
+has_map: false
+has_lightbox: false
+has_narrative: true
+tags: 拼贴,DIY,实验,快闪
+best_for: 短途旅行·音乐节·朋友逛街

@@ -77,3 +77,14 @@
 ## 推荐理由
 
 选这个方向当且仅当：照片极少（≤ 10）且每张都够好、旅行本身是安静克制的。这是最难执行的方向——因为每张照片必须能独自撑起一页。不确定时不要选这个。
+
+<!--META-->
+name: 极简白
+name_en: white-space
+vibe: 留白、克制、空气感
+layout_type: single
+has_map: false
+has_lightbox: false
+has_narrative: true
+tags: 极简,留白,寺院,安静
+best_for: 美术馆·寺院·一日散步

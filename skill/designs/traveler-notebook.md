@@ -69,3 +69,14 @@
 ## 推荐理由
 
 选这个方向当且仅当：旅行是个人探索性质的、照片不追求完美的光影构图、用户想要一本"像自己写的东西"。
+
+<!--META-->
+name: 旅行手帐
+name_en: traveler-notebook
+vibe: 手写、毛边、私人感
+layout_type: collage
+has_map: false
+has_lightbox: false
+has_narrative: true
+tags: 独自,公路,田野,私人
+best_for: 独自旅行·公路·田野笔记

@@ -290,6 +290,8 @@ trip-design **没有 HTML 模板**——你是策展人 + 前端设计师。每�
 
 **用户选了后再进入 Junior Designer Mode。**
 
+**自定方向**：如果用户说"这些都不对，我想要另一种感觉"——问用户描述他们想要的气质，按 `designs/TEMPLATE.md` 的格式现场写一个设计方向文件，然后按它的 spec 执行。（也可以先用 `python3 scripts/import_design.py <file>` 注册，但不必等——直接按 spec 写 HTML 即可。）
+
 **开工前 reference 必读：**
 1. `references/art-direction.md` —— 照片策展、艺术回忆结构、弱图剔除、地图降级规则
 2. `references/diary-html-essentials.md` —— **区块池 + Token 协议**：从池里选 2-4 个区块，不硬塞

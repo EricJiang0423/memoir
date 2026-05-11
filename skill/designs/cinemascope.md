@@ -75,3 +75,14 @@
 ## 推荐理由
 
 选这个方向当且仅当：照片本身已经足够讲一个故事（不需要文字辅助）、光线和构图强烈、用户想要一件"视觉大于文字"的作品。
+
+<!--META-->
+name: 宽银幕
+name_en: cinemascope
+vibe: 电影感、宽幅、叙事
+layout_type: slide
+has_map: true
+has_lightbox: false
+has_narrative: false
+tags: 风光,夜景,城市,沉浸
+best_for: 自然风光·天际线·蓝色时刻

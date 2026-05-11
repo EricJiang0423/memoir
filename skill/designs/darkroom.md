@@ -79,3 +79,14 @@
 ## 推荐理由
 
 选这个方向当且仅当：用户明确说"黑白"、"粗粝"、"不想看文字"或者照片内容明显是城市/夜晚/反叛气质。
+
+<!--META-->
+name: 暗房
+name_en: darkroom
+vibe: 高反差、黑底、粗粝
+layout_type: grid
+has_map: false
+has_lightbox: false
+has_narrative: false
+tags: 黑白,夜晚,粗粝,地下
+best_for: 城市夜行·废墟·地下音乐

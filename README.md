@@ -80,6 +80,25 @@ cp -r skill/ /path/to/.claude/skills/memoir/
 
 不了解可用方向？执行中 agent 会让用户从 `designs/README.md` 一览表中选择。
 
+### 自定义设计方向
+
+如果内置方向都不对，你可以自己写或从外部导入新的设计方向。memoir 提供了 `skill/scripts/import_design.py` 工具：
+
+```bash
+# 从本地文件导入
+python3 skill/scripts/import_design.py my-design.md
+
+# 从 GitHub raw URL 导入
+python3 skill/scripts/import_design.py https://raw.githubusercontent.com/user/repo/main/designs/retrowave.md
+
+# 查看已注册方向及布局类型
+python3 skill/scripts/import_design.py --list
+```
+
+导入的设计会校验 9 个必填章节和 `layout_type` 唯一性（确保结构差异），然后自动注册到 `skill/designs/README.md` 索引中。下次执行时 agent 就能推荐它。
+
+> 参考 `skill/designs/TEMPLATE.md` 了解设计方向文件的格式要求。
+
 ### 隐私是架构，不是功能
 
 照片字节**绝不离开本机**。唯一发出的数据是 GPS 坐标（两位小数精度）→ OpenStreetMap Nominatim 做地名查询。EXIF 解析、图片缩放、聚类、base64 编码、Claude 多模态视觉采样全部在本地完成。

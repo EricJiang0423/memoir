@@ -69,3 +69,15 @@
 ## 推荐理由
 
 选这个方向当且仅当：照片偏暗偏暖，旅行有历史感，用户想要一件"可以打印出来放书架上的东西"。
+
+
+<!--META-->
+name: 大画册
+name_en: heritage-album
+vibe: 厚重、典藏、深色底
+layout_type: spread
+has_map: false
+has_lightbox: false
+has_narrative: true
+tags: 历史,博物馆,人文,古都
+best_for: 历史城市·博物馆·人文深度游
