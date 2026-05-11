@@ -136,7 +136,6 @@ python3 scripts/build_diary.py --in diary_data.json --html draft.html --out fina
 memoir/
 ├── SKILL.md                    ← Agent 主控文档（核心）
 ├── README.md                   ← 本文件（中文）
-├── README.en.md                ← English version
 ├── PRD.md                      ← 产品需求文档
 ├── requirements.txt
 ├── scripts/                    ← 7 个 Python 流水线脚本
