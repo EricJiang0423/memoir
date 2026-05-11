@@ -369,9 +369,8 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr;
-    min-height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   .demo-card:hover { border-color: #666; }
   .demo-thumb {
@@ -379,6 +378,7 @@
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: var(--bg-dark);
+    flex-shrink: 0;
   }
   .demo-thumb img {
     width: 100%;
@@ -389,11 +389,12 @@
   .demo-card:hover img { transform: scale(1.035); }
   .demo-thumb.darkroom img { filter: grayscale(1) contrast(1.25); }
   .demo-thumb.cinema img { filter: saturate(0.9) contrast(1.08); }
-  .demo-thumb.white img { object-fit: contain; padding: 8%; background: #fff; }
+  .demo-thumb.white img { object-fit: contain; padding: 12%; background: #f0f0f0; }
   .demo-body {
     padding: 1.1rem 1.1rem 1.2rem;
     display: flex;
     flex-direction: column;
+    flex: 1;
   }
   .demo-body h3 { margin: 0; font-family: var(--serif); font-size: 1.2rem; line-height: 1.25; }
   .demo-body p {
@@ -650,9 +651,9 @@
         <div class="section-head">
           <div>
             <p class="section-kicker" data-en="The Skill" data-zh="能力">能力</p>
-            <h2 data-zh="一个给 agent 使用的旅行回忆录系统。" data-en="A travel memoir system built for agents.">一个给 agent 使用的旅行回忆录系统。</h2>
+            <h2 data-zh="一切从理解你的旅行开始。" data-en="Everything starts with understanding your trip.">一切从理解你的旅行开始。</h2>
           </div>
-          <p class="section-copy" data-zh="memoir 的核心不是一个网页模板，而是一组可安装的 skill 指令、Python 脚本和设计方向协议。它让 Codex、Claude Code、Cursor 等 agent 能按同一套质量门槛完成本地照片处理和最终作品生成。" data-en="memoir's core is not a web template — it's an installable skill with instructions, Python scripts, and a design direction protocol. It lets agents like Codex, Claude Code, and Cursor process local photos and produce finished work against the same quality bar.">memoir 的核心不是一个网页模板，而是一组可安装的 skill 指令、Python 脚本和设计方向协议。它让 Codex、Claude Code、Cursor 等 agent 能按同一套质量门槛完成本地照片处理和最终作品生成。</p>
+          <p class="section-copy" data-zh="memoir 不是自动化的相册导出器。开工前，agent 会先问你几个问题——这次旅行是什么感觉？照片是手机还是相机拍的？你更想要一本私人日记还是一篇能发出去的游记？然后从设计池里推荐 2-3 个方向让你选。如果池子里的都不对，agent 可以按你描述的气质现场写一个新的设计方向。" data-en="memoir is not an automated photo export tool. Before anything starts, the agent asks a few questions — what did this trip feel like? Phone or camera photos? Do you want a private journal or a shareable story? Then it recommends 2-3 design directions from the pool. If none of them fit, the agent can draft a brand new design direction on the spot based on the mood you describe.">memoir 不是自动化的相册导出器。开工前，agent 会先问你几个问题——这次旅行是什么感觉？照片是手机还是相机拍的？你更想要一本私人日记还是一篇能发出去的游记？然后从设计池里推荐 2-3 个方向让你选。如果池子里的都不对，agent 可以按你描述的气质现场写一个新的设计方向。</p>
         </div>
         <div class="capability-grid">
           <article class="capability">
