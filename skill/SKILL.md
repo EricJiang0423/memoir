@@ -419,10 +419,11 @@ python3 scripts/extract_photos.py --date-range last-week --dry-run
 | 触发 | 动作 |
 |------|------|
 | `cloud_only ≤ 5` 且 `optimized ≤ 10` | **自动跳过**——量小，影响微 |
-| `cloud_only > 5` | 仍然停下问下载/跳过 |
-| `optimized > 10` | 仍然停下问是否触发完整下载 |
+| `cloud_only > 100` | **先跑 prefilter 缩量再问下载**——prefilter 只需 SQLite 元数据，不依赖下载。用 Apple 美学评分 + GPS 多样性 + 人物筛选把候选从数千张压到百张以内，然后只下载精选集 |
+| `cloud_only > 5` 且 `≤ 100` | 停下问下载/跳过 |
+| `optimized > 10` | 停下问是否触发完整下载 |
 
-跳过时简短告知：「云端只有 2 张，自动跳过；继续。」让用户知情但不要求回复。
+跳过时简短告知：「云端只有 2 张，自动跳过；继续。」让用户知情但不要求回复。大量云端时（> 100）prefilter 后再报告：「从 6,492 张预筛选到 108 张精选，只需下载这些。」
 
 #### Step 4 · 自动连跑 extract → geocode → cluster
 
@@ -484,6 +485,8 @@ python3 scripts/cluster.py --in geocoded_photos.json --out diary_data.json
 | 时区缺失 | EXIF 无 OffsetTime | 假设拍摄地本地时间，写日记时提示用户「时区按拍摄地推断」|
 | 用户拒绝回答 🛑 | 用户说"直接做"或不答 | 用 best judgment 默认值（cloud_only 跳过 / 默认聚类 / base64 模式），但**明确标注 assumption**让用户知道改在哪里 |
 | `--list-recent-trips` 无结果 | 近 90 天没满足启发式的段 | 提示用户：「近 90 天没找到 ≥ 10 张 ≥ 2 天的旅行段。换更大窗口（`--days 180`），或直接给精确日期范围」|
+| prefilter 后聚类为空 | cluster 打印「共 0 天，0 张照片」| 检查 `geocoded_photos.json`——prefilter 后的精选照片可能仍带着 `skip_reason: "cloud_only"`，而 `cluster.py:build_diary()` 只保留 `skip_reason is None` 的照片。在 geocode 之后、cluster 之前手动清除 skip_reason |
+| Agent 无多模态能力 | Read 照片返回 `[Unsupported Image]` | 降级方案：① Pillow 生成缩略图（800px, JPEG q=60）→ ② 用 `codex exec` 描述每张 → ③ 主模型基于文字描述写叙述。详见下方「跨 agent 环境适配」|
 
 ## 反 slop 速查（策展 + 叙述 + 前端）
 
@@ -551,7 +554,7 @@ trip-design 的 slop 风险有三个面向：**相册导出化**（全放、乱�
 
 - 所有路径用相对本 SKILL.md 的形式（`references/xxx.md`、`assets/xxx.html`、`scripts/xxx.py`）
 - 不依赖 Claude Code 独有特性（fork-verifier、Artifacts 渲染、Skill 路由）
-- **多模态视觉采样若 agent 不支持读取本地图片**：degrade 为"仅基于 EXIF + 地名 + 时间"写叙述，明确告诉用户「未做视觉采样，叙述精度可能下降」
+- **多模态视觉采样若 agent 不支持读取本地图片**：两条降级路线——路线 A（推荐）：Python 生成缩略图（800px, JPEG q=60）→ `codex exec` 用 GPT-5.5 vision 描述每张照片 → 主模型基于文字描述写叙述。路线 B（保底）：仅基于 EXIF + 地名 + 时间写叙述，明确告诉用户「未做视觉采样，叙述精度可能下降」。19 张缩略图约消耗 63K Codex tokens
 
 ## 数据契约（脚本间唯一接口）
 

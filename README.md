@@ -109,7 +109,7 @@ python3 skill/scripts/import_design.py --list
 
 ### 借力 Apple Photos 原生智能
 
-Photos.app 模式下，memoir 直接读取 Apple 端侧 ML 评分：27 维美学评分、截图标记、收藏、隐藏、已命名人物。这些数据在下载前就能用——云端照片还没下载，memoir 已经知道哪些值得留。
+Photos.app 模式下，memoir 直接读取 Apple 端侧 ML 评分：27 维美学评分、截图标记、收藏、隐藏、已命名人物。这些数据在下载前就能用——云端照片还没下载，memoir 已经知道哪些值得留。**实战验证**：6,492 张全云端照片 → 预筛选 108 张精选（1.7%），只下载最好的那部分。
 
 ---
 

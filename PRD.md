@@ -138,7 +138,7 @@ Claude 负责：
 | 隐私 | 所有处理在本地完成，照片文件不上传任何服务器（仅 GPS 坐标发送至 Nominatim） |
 | 性能 | 100 张照片完整处理时间 < 5 分钟（地理编码为主要瓶颈） |
 | 离线 | 地图底图需联网，其余功能完全离线可用 |
-| 体积 | 100 张照片生成 HTML 约 50-100MB，浏览器可流畅打开 |
+| 体积 | 107 张照片实测生成 HTML 约 114MB（base64 内嵌），平均每张贡献 ~1.06MB；150 张接近 200MB 阈值 |
 
 ---
 
@@ -303,4 +303,12 @@ apple_score = {
 | 仓库重构 | 根层 | ✓ skill 核心移入 `skill/` 自包含目录；demo/部署/dev 文档留在根层 |
 | 响应式修复 | `demos/kyoto-3-days.diary.html` | ✓ 图片高度固定→max-height + auto；1100px / 780px / 520px 三断点；移动端触摸滑动 |
 
-**待真实环境验证**：HEIC/RAW 解码（依赖 `brew install libheif` + `pip install pillow-heif`）；Photos.app 模式（需「完全磁盘访问」授权）；跨 agent dry-run（Codex / Cursor）。
+**V1.4 实战验证**（2026-05-11，挪威 6 日旅行）：
+- ✓ Photos.app 模式全量云端（6,492 张 cloud_only）→ prefilter（108 张精选）→ AppleScript 导出 → 本地重提取 → 流水线全通
+- ✓ Apple 美学评分 + 人物筛选（`--persons`）有效压缩比 60:1
+- ✓ HEIC/JPEG 混合解码通过
+- ✓ Codex (GPT-5.5) 视觉采样降级路线验证，19 张缩略图 63K tokens
+- ✓ 最终产出：107 张照片，114MB 自包含 HTML
+- ⚠ prefilter→AppleScript 导出后 UUID 丢失，元数据不连续（文档已记录 workaround）
+
+**待验证**：RAW 解码；跨 agent 全链路（Codex / Cursor）；Windows/Linux 兼容性（不做）。

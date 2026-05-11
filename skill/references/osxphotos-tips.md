@@ -189,9 +189,15 @@ for i in range(0, len(target_uuids), BATCH_SIZE):
 # python3 scripts/extract_photos.py --folder /tmp/photos_export --out raw_photos.json
 ```
 
+**实战验证**（2026-05-11，挪威旅行，108 UUID → 3 批导出）：
+- 171 个文件（含 Live Photo MOV，后续 extract 自动过滤），耗时约 3-5 分钟
+- 导出后重跑 `extract_photos.py --folder` 拿到本地路径
+- **注意**：导出文件名为原始名（IMG_2318.JPG），不再带 UUID——如需映射回 Photos.sqlite 元数据（Apple 评分、人物标签），在 prefilter 阶段保存 UUID→元数据 mapping
+
 **关键点**：
 - AppleScript `export ... with using originals` 导出未修改原片（含完整 EXIF）
 - 批量 50 张一组——太大 Photos.app 可能超时
 - 对 cloud_only 照片，导出过程会自动触发 iCloud 下载（Photos.app 自己处理）
 - 导出后照片在临时目录，跑完流水线后按 Step 8 安全清理
+- Live Photo 会同时导出 JPG/HEIC + MOV，mov 文件可在导出后 `rm *.mov` 清理以节省磁盘
 
