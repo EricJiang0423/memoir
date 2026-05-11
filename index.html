@@ -21,8 +21,8 @@
     --accent: #333;
     --shadow: 0 22px 60px rgba(0,0,0,0.12);
     --serif: "Songti SC", "Noto Serif CJK SC", "Noto Serif SC", STSong, Georgia, serif;
-    --sans: "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Noto Sans CJK SC", -apple-system, BlinkMacSystemFont, sans-serif;
-    --mono: "SFMono-Regular", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    --sans: "Songti SC", "Noto Serif CJK SC", "Noto Serif SC", STSong, Georgia, serif;
+    --mono: "Songti SC", "Noto Serif CJK SC", "Noto Serif SC", STSong, Georgia, serif;
   }
 
   * { box-sizing: border-box; }
@@ -114,6 +114,7 @@
 
   /* hero */
   .hero {
+    position: relative;
     min-height: 86svh;
     color: var(--text-on-dark);
     display: grid;
@@ -121,8 +122,17 @@
     padding: clamp(6.5rem, 10vw, 9rem) clamp(1.2rem, 5vw, 5rem) clamp(3rem, 7vw, 5rem);
     background:
       linear-gradient(90deg, rgba(17,17,17,0.92) 0%, rgba(17,17,17,0.65) 42%, rgba(17,17,17,0.15) 100%),
-      linear-gradient(0deg, rgba(17,17,17,0.85) 0%, transparent 42%),
-      url("./demos/assets/photo_0018.jpg") center / cover no-repeat;
+      linear-gradient(0deg, rgba(17,17,17,0.85) 0%, transparent 42%);
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: url("./demos/assets/photo_0018.jpg") center / cover no-repeat;
+    filter: grayscale(1) contrast(1.1);
   }
   .hero-inner {
     width: min(1120px, 100%);
